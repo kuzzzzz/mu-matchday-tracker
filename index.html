@@ -358,15 +358,26 @@
   ];
 
   const STORAGE_KEY = 'mu-tracker-data-v1';
-  let records = {}; // id -> {mu, opp, highlight, motm}
+  // Seeded result for GW1 (Hull City 2-0 Man Utd, 22 Aug 2026)
+  let records = {
+    1: {
+      mu: 0,
+      opp: 2,
+      highlight: 'Hull City 2-0 Man United. Goals: Semi Ajayi 17\', Nobel Mendy 38\'. Shock opening-day defeat at MKM Stadium – first league loss to Hull in 52 years. Set-piece vulnerability cost United.'
+    }
+  };
   let filter = 'all';
   const root = document.getElementById('mu-root');
 
   async function loadData() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) records = JSON.parse(raw);
-    } catch (e) { records = {}; }
+      if (raw) {
+        const saved = JSON.parse(raw);
+        // Merge: keep seeded GW1 unless user has already edited it
+        records = { ...records, ...saved };
+      }
+    } catch (e) { /* keep seeded */ }
     render();
   }
 

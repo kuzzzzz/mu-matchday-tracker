@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Red Devils' Matchday Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=IBM+Plex+Mono:wght@500;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;">
+<div id="mu-root"></div>
+<style>
+  #mu-root {
+    --paper: #EFE4C8;
+    --paper-dark: #E2D3AC;
+    --ink: #241E17;
+    --red: #C8102E;
+    --red-dark: #8C0B20;
+    --gold: #C6A15B;
+    --night: #14110D;
+    --green: #2F5233;
+    --grey: #6b6252;
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    background: var(--night);
+    color: var(--paper);
+    padding: 28px 16px 60px;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  #mu-root * { box-sizing: border-box; }
+
+  @font-face { font-family: 'Bebas'; src: local('Arial Narrow Bold'); }
+
+  .mu-display {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .mu-mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .mu-header {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+  .mu-header .eyebrow {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .mu-header h1 {
+    font-size: clamp(28px, 6vw, 42px);
+    margin: 0;
+    color: var(--paper);
+  }
+  .mu-header h1 span { color: var(--red); }
+  .mu-header .season {
+    color: var(--grey);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  /* Flip scoreboard */
+  .scoreboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    max-width: 640px;
+    margin: 24px auto 30px;
+  }
+  @media (min-width: 560px) {
+    .scoreboard { grid-template-columns: repeat(8, 1fr); }
+  }
+  .flip {
+    background: #1c1812;
+    border: 1px solid #33291a;
+    border-radius: 6px;
+    padding: 10px 4px;
+    text-align: center;
+  }
+  .flip .val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .flip .lab {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--grey);
+    margin-top: 2px;
+    text-transform: uppercase;
+  }
+
+  .streak-line {
+    text-align: center;
+    color: var(--paper);
+    font-size: 13px;
+    margin-bottom: 26px;
+  }
+  .streak-line .pips { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 8px; }
+  .pip {
+    width: 18px; height: 18px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700; color: #fff;
+  }
+  .pip.W { background: var(--green); }
+  .pip.D { background: var(--grey); }
+  .pip.L { background: var(--red-dark); }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: transparent;
+    border: 1px solid #3a3226;
+    color: var(--grey);
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .tab.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: #fff;
+  }
+
+  /* Ticket grid */
+  .tickets {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .ticket {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    display: flex;
+  }
+  .ticket .stub {
+    width: 34px;
+    background: var(--paper-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--grey);
+    text-transform: uppercase;
+    border-right: 2px dashed #b8a97e;
+    flex-shrink: 0;
+  }
+  .ticket .body { padding: 14px 14px 16px; flex: 1; min-width: 0; }
+
+  .ticket .row1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 2px;
+  }
+  .ticket .gw { font-size: 11px; color: var(--grey); letter-spacing: 0.1em; }
+  .ticket .comp { font-size: 10px; color: var(--red); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+  .ticket .date { font-size: 11px; color: var(--grey); margin-bottom: 8px; }
+
+  .fixture-line {
+    font-family: 'Oswald', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    line-height: 1.25;
+  }
+  .fixture-line .venue-tag {
+    font-size: 10px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .score-form { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .score-form input[type=number] {
+    width: 46px;
+    padding: 6px 4px;
+    text-align: center;
+    border: 1px solid #b8a97e;
+    border-radius: 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    background: #fffdf7;
+  }
+  .score-form .vs { font-size: 11px; color: var(--grey); }
+  .highlight-input {
+    width: 100%;
+    resize: vertical;
+    min-height: 42px;
+    border: 1px solid #b8a97e;
+    border-radius: 5px;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 12px;
+    background: #fffdf7;
+    margin-bottom: 8px;
+  }
+  .save-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .save-btn:hover { background: var(--red); }
+
+  /* Played state */
+  .stamp-block { position: relative; }
+  .final-score {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 30px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0 8px;
+  }
+  .result-stamp {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    transform: rotate(12deg);
+    opacity: 0.9;
+  }
+  .result-stamp.W { color: var(--green); border-color: var(--green); }
+  .result-stamp.D { color: var(--grey); border-color: var(--grey); }
+  .result-stamp.L { color: var(--red-dark); border-color: var(--red-dark); }
+
+  .highlight-display {
+    font-size: 12.5px;
+    color: #3a3226;
+    background: rgba(0,0,0,0.05);
+    border-left: 3px solid var(--gold);
+    padding: 6px 9px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    white-space: pre-wrap;
+  }
+  .highlight-display.empty { color: var(--grey); font-style: italic; }
+
+  .edit-link {
+    font-size: 11px;
+    color: var(--red);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: inherit;
+  }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--grey);
+    padding: 40px 0;
+    font-size: 13px;
+  }
+
+  .status-msg {
+    text-align: center;
+    font-size: 11px;
+    color: var(--grey);
+    margin-top: 30px;
+  }
+
+  canvas.confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+<script>
+(function(){
+  const FIXTURES = [
+    {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
+    {id:2, gw:2, date:'Sun 30 Aug 2026', opp:'Ipswich Town', venue:'H', comp:'PL'},
+    {id:3, gw:3, date:'Sun 6 Sep 2026', opp:'Everton', venue:'A', comp:'PL'},
+    {id:4, gw:4, date:'Sun 13 Sep 2026', opp:'Manchester City', venue:'H', comp:'PL'},
+    {id:5, gw:5, date:'Sun 20 Sep 2026', opp:'Fulham', venue:'A', comp:'PL'},
+    {id:6, gw:6, date:'Sat 10 Oct 2026', opp:'Tottenham', venue:'H', comp:'PL'},
+    {id:7, gw:7, date:'Sun 18 Oct 2026', opp:'Leeds United', venue:'A', comp:'PL'},
+    {id:8, gw:8, date:'Sun 25 Oct 2026', opp:'Bournemouth', venue:'H', comp:'PL'},
+    {id:9, gw:9, date:'Sat 31 Oct 2026', opp:'Chelsea', venue:'A', comp:'PL'},
+    {id:10, gw:10, date:'Sat 7 Nov 2026', opp:'Aston Villa', venue:'H', comp:'PL'},
+    {id:11, gw:11, date:'Sat 21 Nov 2026', opp:'Liverpool', venue:'A', comp:'PL'},
+    {id:12, gw:12, date:'Sat 28 Nov 2026', opp:'Brentford', venue:'H', comp:'PL'},
+    {id:13, gw:13, date:'Wed 2 Dec 2026', opp:'Newcastle', venue:'A', comp:'PL'},
+    {id:14, gw:14, date:'Sat 5 Dec 2026', opp:'Coventry City', venue:'H', comp:'PL'},
+    {id:15, gw:15, date:'Sat 12 Dec 2026', opp:'Crystal Palace', venue:'A', comp:'PL'},
+    {id:16, gw:16, date:'Sat 19 Dec 2026', opp:'Arsenal', venue:'A', comp:'PL'},
+    {id:17, gw:17, date:'Sat 26 Dec 2026', opp:'Nottingham Forest', venue:'H', comp:'PL'},
+    {id:18, gw:18, date:'Wed 30 Dec 2026', opp:'Sunderland', venue:'H', comp:'PL'},
+    {id:19, gw:19, date:'Sat 2 Jan 2027', opp:'Brighton', venue:'A', comp:'PL'},
+    {id:20, gw:20, date:'Wed 6 Jan 2027', opp:'Newcastle', venue:'H', comp:'PL'},
+    {id:21, gw:21, date:'Sat 16 Jan 2027', opp:'Aston Villa', venue:'A', comp:'PL'},
+    {id:22, gw:22, date:'Sat 23 Jan 2027', opp:'Liverpool', venue:'H', comp:'PL'},
+    {id:23, gw:23, date:'Sat 30 Jan 2027', opp:'Brentford', venue:'A', comp:'PL'},
+    {id:24, gw:24, date:'Sat 6 Feb 2027', opp:'Chelsea', venue:'H', comp:'PL'},
+    {id:25, gw:25, date:'Wed 10 Feb 2027', opp:'Brighton', venue:'H', comp:'PL'},
+    {id:26, gw:26, date:'Sat 20 Feb 2027', opp:'Nottingham Forest', venue:'A', comp:'PL'},
+    {id:27, gw:27, date:'Sat 27 Feb 2027', opp:'Arsenal', venue:'H', comp:'PL'},
+    {id:28, gw:28, date:'Wed 3 Mar 2027', opp:'Sunderland', venue:'A', comp:'PL'},
+    {id:29, gw:29, date:'Sat 13 Mar 2027', opp:'Everton', venue:'H', comp:'PL'},
+    {id:30, gw:30, date:'Sat 20 Mar 2027', opp:'Manchester City', venue:'A', comp:'PL'},
+    {id:31, gw:31, date:'Sat 10 Apr 2027', opp:'Hull City', venue:'H', comp:'PL'},
+    {id:32, gw:32, date:'Sat 17 Apr 2027', opp:'Ipswich Town', venue:'A', comp:'PL'},
+    {id:33, gw:33, date:'Sat 24 Apr 2027', opp:'Crystal Palace', venue:'H', comp:'PL'},
+    {id:34, gw:34, date:'Sat 1 May 2027', opp:'Coventry City', venue:'A', comp:'PL'},
+    {id:35, gw:35, date:'Sat 8 May 2027', opp:'Bournemouth', venue:'A', comp:'PL'},
+    {id:36, gw:36, date:'Sat 15 May 2027', opp:'Leeds United', venue:'H', comp:'PL'},
+    {id:37, gw:37, date:'Sun 23 May 2027', opp:'Tottenham', venue:'A', comp:'PL'},
+    {id:38, gw:38, date:'Sun 30 May 2027', opp:'Fulham', venue:'H', comp:'PL'},
+  ];
+
+  const STORAGE_KEY = 'mu-tracker-data-v1';
+  let records = {}; // id -> {mu, opp, highlight, motm}
+  let filter = 'all';
+  const root = document.getElementById('mu-root');
+
+  async function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) records = JSON.parse(raw);
+    } catch (e) { records = {}; }
+    render();
+  }
+
+  async function saveData() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    } catch (e) { console.error('Storage save failed', e); }
+  }
+
+  function resultFor(rec) {
+    if (rec.mu > rec.opp) return 'W';
+    if (rec.mu < rec.opp) return 'L';
+    return 'D';
+  }
+
+  function computeStats() {
+    let p=0,w=0,d=0,l=0,gf=0,ga=0;
+    const streak = [];
+    FIXTURES.forEach(f => {
+      const rec = records[f.id];
+      if (rec && rec.mu !== undefined && rec.opp !== undefined) {
+        p++; gf += Number(rec.mu); ga += Number(rec.opp);
+        const r = resultFor(rec);
+        if (r==='W') w++; else if (r==='D') d++; else l++;
+        streak.push(r);
+      }
+    });
+    return {p,w,d,l,gf,ga,gd:gf-ga,pts:w*3+d, streak: streak.slice(-6)};
+  }
+
+  function fireConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.className = 'confetti-canvas';
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const colors = ['#C8102E', '#C6A15B', '#EFE4C8', '#2F5233'];
+    const pieces = Array.from({length: 90}, () => ({
+      x: Math.random()*canvas.width,
+      y: -20 - Math.random()*canvas.height*0.3,
+      vy: 2 + Math.random()*3,
+      vx: -1.5 + Math.random()*3,
+      size: 4 + Math.random()*5,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rot: Math.random()*360,
+      vr: -6 + Math.random()*12
+    }));
+    let frame = 0;
+    function tick() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pieces.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot * Math.PI/180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+        ctx.restore();
+      });
+      frame++;
+      if (frame < 110) requestAnimationFrame(tick);
+      else canvas.remove();
+    }
+    tick();
+  }
+
+  function render() {
+    const stats = computeStats();
+    const visible = FIXTURES.filter(f => {
+      const played = records[f.id] && records[f.id].mu !== undefined;
+      if (filter === 'played') return played;
+      if (filter === 'upcoming') return !played;
+      return true;
+    });
+
+    root.innerHTML = `
+      <div class="mu-header">
+        <div class="eyebrow">Traouse Presents</div>
+        <h1 class="mu-display">The Red <span>Devils'</span> Matchday Log</h1>
+        <div class="season">2026/27 Premier League &middot; Champions League fixtures land after the Aug 27 draw</div>
+      </div>
+
+      <div class="scoreboard">
+        <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
+        <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
+        <div class="flip"><div class="val">${stats.d}</div><div class="lab">Drawn</div></div>
+        <div class="flip"><div class="val">${stats.l}</div><div class="lab">Lost</div></div>
+        <div class="flip"><div class="val">${stats.gf}</div><div class="lab">Goals For</div></div>
+        <div class="flip"><div class="val">${stats.ga}</div><div class="lab">Goals Against</div></div>
+        <div class="flip"><div class="val">${stats.gd>0?'+':''}${stats.gd}</div><div class="lab">Gl Diff</div></div>
+        <div class="flip"><div class="val">${stats.pts}</div><div class="lab">Points</div></div>
+      </div>
+
+      <div class="streak-line">
+        Current form
+        <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results logged yet</span>'}</span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab ${filter==='all'?'active':''}" data-f="all">All 38</button>
+        <button class="tab ${filter==='played'?'active':''}" data-f="played">Played (${stats.p})</button>
+        <button class="tab ${filter==='upcoming'?'active':''}" data-f="upcoming">Upcoming (${38-stats.p})</button>
+      </div>
+
+      <div class="tickets">
+        ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
+      </div>
+
+      <div class="status-msg">Scores and highlights are saved automatically to this artifact.</div>
+    `;
+
+    root.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => { filter = btn.dataset.f; render(); });
+    });
+
+    visible.forEach(f => {
+      const rec = records[f.id];
+      const played = rec && rec.mu !== undefined;
+      const saveBtn = root.querySelector(`#save-${f.id}`);
+      const editBtn = root.querySelector(`#edit-${f.id}`);
+      if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+          const muVal = root.querySelector(`#mu-${f.id}`).value;
+          const oppVal = root.querySelector(`#opp-${f.id}`).value;
+          const hlVal = root.querySelector(`#hl-${f.id}`).value;
+          if (muVal === '' || oppVal === '') return;
+          const wasWin = records[f.id] && records[f.id].mu !== undefined && resultFor(records[f.id]) === 'W';
+          records[f.id] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal };
+          await saveData();
+          render();
+          const nowWin = resultFor(records[f.id]) === 'W';
+          if (nowWin) fireConfetti();
+        });
+      }
+      if (editBtn) {
+        editBtn.addEventListener('click', () => {
+          delete records[f.id].mu;
+          render();
+        });
+      }
+    });
+  }
+
+  function renderTicket(f) {
+    const rec = records[f.id];
+    const played = rec && rec.mu !== undefined;
+    const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
+    const oppFirst = f.venue === 'A';
+
+    if (played) {
+      const r = resultFor(rec);
+      const line1 = oppFirst ? `${f.opp} <span class="mu-mono">${rec.opp}</span>` : `Man United <span class="mu-mono">${rec.mu}</span>`;
+      const line2 = oppFirst ? `Man United <span class="mu-mono">${rec.mu}</span>` : `${f.opp} <span class="mu-mono">${rec.opp}</span>`;
+      return `
+        <div class="ticket">
+          <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
+          <div class="body stamp-block">
+            <div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div>
+            <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
+            <div class="date">${f.date} &middot; ${venueLabel}</div>
+            <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
+            <div class="final-score">${rec.mu} &ndash; ${rec.opp}</div>
+            <div class="highlight-display ${rec.highlight ? '' : 'empty'}">${rec.highlight ? escapeHtml(rec.highlight) : 'No highlight noted.'}</div>
+            <button class="edit-link" id="edit-${f.id}">Edit result</button>
+          </div>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="ticket">
+        <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
+        <div class="body">
+          <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
+          <div class="date">${f.date} &middot; ${venueLabel}</div>
+          <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
+          <div class="score-form">
+            <span class="mu-mono">MUFC</span>
+            <input type="number" min="0" id="mu-${f.id}" placeholder="-" />
+            <span class="vs">:</span>
+            <input type="number" min="0" id="opp-${f.id}" placeholder="-" />
+            <span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span>
+          </div>
+          <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, Man of the Match...">${rec && rec.highlight ? escapeHtml(rec.highlight) : ''}</textarea>
+          <button class="save-btn" id="save-${f.id}">Stamp result</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  loadData();
+})();
+</script>
+</body></html>

@@ -335,22 +335,18 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
-import { getDatabase, ref, get, set, onValue } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 
-// ═══════════════════════════════════════════════════════════
-// 1. PASTE YOUR FIREBASE CONFIG BELOW (from Firebase Console)
-//    Project settings → Your apps → Web app → Config
-// ═══════════════════════════════════════════════════════════
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBZ_KO97a6ZjIdQDKADwJD9J5bv0ozfrPs",
+  authDomain: "manumatchlog.firebaseapp.com",
+  databaseURL: "https://manumatchlog-default-rtdb.firebaseio.com",
+  projectId: "manumatchlog",
+  storageBucket: "manumatchlog.firebasestorage.app",
+  messagingSenderId: "723395600000",
+  appId: "1:723395600000:web:ee1a72c1288ad7c7345065",
+  measurementId: "G-NRK67M2WTE"
 };
-// ═══════════════════════════════════════════════════════════
 
 const FIXTURES = [
   {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
@@ -399,24 +395,22 @@ const DB_PATH = 'records';
 
 let records = {};
 let filter = 'all';
-let syncStatus = 'loading'; // loading | live | local | error
+let syncStatus = 'loading';
 let statusDetail = '';
 let db = null;
 let recordsRef = null;
 const root = document.getElementById('mu-root');
 
-const configReady = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('YOUR_');
+const configReady = true;
 
-if (configReady) {
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getDatabase(app);
-    recordsRef = ref(db, DB_PATH);
-  } catch (e) {
-    console.error(e);
-    syncStatus = 'error';
-    statusDetail = e.message || 'Firebase init failed';
-  }
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getDatabase(app);
+  recordsRef = ref(db, DB_PATH);
+} catch (e) {
+  console.error(e);
+  syncStatus = 'error';
+  statusDetail = e.message || 'Firebase init failed';
 }
 
 async function loadFromGithubFallback() {
@@ -434,12 +428,10 @@ async function loadFromGithubFallback() {
 }
 
 async function loadData() {
-  if (configReady && recordsRef) {
-    // Live sync: any change on any device updates this page
+  if (recordsRef) {
     onValue(recordsRef, (snap) => {
       const val = snap.val();
       records = val && typeof val === 'object' ? val : {};
-      // Seed GW1 if the DB is empty
       if (!records['1'] && !records[1]) {
         records = {
           '1': {
@@ -450,7 +442,6 @@ async function loadData() {
         };
         set(recordsRef, records).catch(() => {});
       }
-      // Normalise keys to strings
       const normalised = {};
       Object.keys(records).forEach(k => { normalised[String(k)] = records[k]; });
       records = normalised;
@@ -461,12 +452,12 @@ async function loadData() {
     }, (err) => {
       console.error(err);
       syncStatus = 'error';
-      statusDetail = err.message || 'Could not read Firebase';
+      statusDetail = err.message || 'Could not read Firebase — create Realtime Database & set rules';
       loadFromGithubFallback().then(render);
     });
   } else {
     syncStatus = 'local';
-    statusDetail = 'Firebase not configured — using local + repo fallback';
+    statusDetail = 'Firebase not ready — using local + repo fallback';
     await loadFromGithubFallback();
     render();
   }
@@ -474,7 +465,7 @@ async function loadData() {
 
 async function saveData() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
-  if (configReady && recordsRef) {
+  if (recordsRef) {
     try {
       await set(recordsRef, records);
       syncStatus = 'live';
@@ -616,16 +607,6 @@ function render() {
       <div class="season">2026/27 Premier League &middot; Champions League fixtures land after the Aug 27 draw</div>
     </div>
 
-    ${!configReady ? `
-    <div class="setup-banner">
-      <strong>One-time setup for live sync across all browsers</strong><br>
-      1. Go to <a href="https://console.firebase.google.com" target="_blank" rel="noopener" style="color:var(--gold)">console.firebase.google.com</a> → Create project<br>
-      2. Build → Realtime Database → Create database → start in <strong>test mode</strong> (or set rules below)<br>
-      3. Project settings (gear) → Your apps → Web → register app → copy the <code>firebaseConfig</code><br>
-      4. Paste it into <code>index.html</code> (the block at the top of the script) and commit<br>
-      5. Database rules (for personal use): <code>{ "rules": { ".read": true, ".write": true } }</code>
-    </div>` : ''}
-
     <div class="scoreboard">
       <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
       <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
@@ -687,7 +668,6 @@ function render() {
         if (records[key]) {
           delete records[key].mu;
           delete records[key].opp;
-          // Keep highlight if present, or remove whole entry
           if (!records[key].highlight) delete records[key];
         }
         await saveData();

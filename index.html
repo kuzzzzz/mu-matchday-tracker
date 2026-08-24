@@ -62,7 +62,6 @@
     margin-top: 4px;
   }
 
-  /* Flip scoreboard */
   .scoreboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -110,7 +109,6 @@
   .pip.D { background: var(--grey); }
   .pip.L { background: var(--red-dark); }
 
-  /* Tabs */
   .tabs {
     display: flex;
     justify-content: center;
@@ -136,7 +134,6 @@
     color: #fff;
   }
 
-  /* Ticket grid */
   .tickets {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -236,7 +233,6 @@
   }
   .save-btn:hover { background: var(--red); }
 
-  /* Played state */
   .stamp-block { position: relative; }
   .final-score {
     font-family: 'IBM Plex Mono', monospace;
@@ -358,33 +354,47 @@
   ];
 
   const STORAGE_KEY = 'mu-tracker-data-v1';
-  // Seeded result for GW1 (Hull City 2-0 Man Utd, 22 Aug 2026)
-  let records = {
-    1: {
-      mu: 0,
-      opp: 2,
-      highlight: 'Hull City 2-0 Man United. Goals: Semi Ajayi 17\', Nobel Mendy 38\'. Shock opening-day defeat at MKM Stadium – first league loss to Hull in 52 years. Set-piece vulnerability cost United.'
-    }
-  };
+  // Shared source of truth (works on GitHub Pages and raw.githubusercontent.com)
+  const DATA_URL = 'https://raw.githubusercontent.com/kuzzzzz/mu-matchday-tracker/main/data.json';
+  let records = {};
   let filter = 'all';
+  let loadError = null;
   const root = document.getElementById('mu-root');
 
   async function loadData() {
+    // 1) Shared file from the repo (same on every browser)
+    try {
+      const res = await fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+      if (res.ok) {
+        const remote = await res.json();
+        records = remote && typeof remote === 'object' ? remote : {};
+      } else {
+        loadError = 'Could not load shared data (' + res.status + ')';
+      }
+    } catch (e) {
+      loadError = 'Offline or blocked from loading shared data';
+    }
+
+    // 2) Merge any local edits (this device only) on top
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const saved = JSON.parse(raw);
-        // Merge: keep seeded GW1 unless user has already edited it
-        records = { ...records, ...saved };
+        const local = JSON.parse(raw);
+        records = { ...records, ...local };
       }
-    } catch (e) { /* keep seeded */ }
+    } catch (e) {}
+
     render();
   }
 
   async function saveData() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-    } catch (e) { console.error('Storage save failed', e); }
+    } catch (e) {
+      console.error('Local save failed', e);
+    }
+    // Note: permanent shared updates go through the repo (data.json).
+    // Tell Grok "log GW# result X-Y" and it will update data.json for everyone.
   }
 
   function resultFor(rec) {
@@ -487,7 +497,11 @@
         ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
       </div>
 
-      <div class="status-msg">Scores and highlights are saved automatically to this artifact.</div>
+      <div class="status-msg">
+        Shared results load from the repo (data.json) — same on every browser.<br>
+        Stamping a result saves on this device; tell Grok to log it for permanent shared update.
+        ${loadError ? '<br><span style="color:#c66">' + loadError + '</span>' : ''}
+      </div>
     `;
 
     root.querySelectorAll('.tab').forEach(btn => {
@@ -495,8 +509,6 @@
     });
 
     visible.forEach(f => {
-      const rec = records[f.id];
-      const played = rec && rec.mu !== undefined;
       const saveBtn = root.querySelector(`#save-${f.id}`);
       const editBtn = root.querySelector(`#edit-${f.id}`);
       if (saveBtn) {
@@ -505,17 +517,17 @@
           const oppVal = root.querySelector(`#opp-${f.id}`).value;
           const hlVal = root.querySelector(`#hl-${f.id}`).value;
           if (muVal === '' || oppVal === '') return;
-          const wasWin = records[f.id] && records[f.id].mu !== undefined && resultFor(records[f.id]) === 'W';
           records[f.id] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal };
           await saveData();
           render();
-          const nowWin = resultFor(records[f.id]) === 'W';
-          if (nowWin) fireConfetti();
+          if (resultFor(records[f.id]) === 'W') fireConfetti();
         });
       }
       if (editBtn) {
         editBtn.addEventListener('click', () => {
           delete records[f.id].mu;
+          delete records[f.id].opp;
+          saveData();
           render();
         });
       }
@@ -526,12 +538,9 @@
     const rec = records[f.id];
     const played = rec && rec.mu !== undefined;
     const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
-    const oppFirst = f.venue === 'A';
 
     if (played) {
       const r = resultFor(rec);
-      const line1 = oppFirst ? `${f.opp} <span class="mu-mono">${rec.opp}</span>` : `Man United <span class="mu-mono">${rec.mu}</span>`;
-      const line2 = oppFirst ? `Man United <span class="mu-mono">${rec.mu}</span>` : `${f.opp} <span class="mu-mono">${rec.opp}</span>`;
       return `
         <div class="ticket">
           <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>

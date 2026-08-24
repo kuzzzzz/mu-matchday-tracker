@@ -340,7 +340,7 @@ import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebase
 const firebaseConfig = {
   apiKey: "AIzaSyBZ_KO97a6ZjIdQDKADwJD9J5bv0ozfrPs",
   authDomain: "manumatchlog.firebaseapp.com",
-  databaseURL: "https://manumatchlog-default-rtdb.firebaseio.com",
+  databaseURL: "https://manumatchlog-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "manumatchlog",
   storageBucket: "manumatchlog.firebasestorage.app",
   messagingSenderId: "723395600000",
@@ -401,8 +401,6 @@ let db = null;
 let recordsRef = null;
 const root = document.getElementById('mu-root');
 
-const configReady = true;
-
 try {
   const app = initializeApp(firebaseConfig);
   db = getDatabase(app);
@@ -452,7 +450,7 @@ async function loadData() {
     }, (err) => {
       console.error(err);
       syncStatus = 'error';
-      statusDetail = err.message || 'Could not read Firebase — create Realtime Database & set rules';
+      statusDetail = err.message || 'Could not read Firebase — check rules';
       loadFromGithubFallback().then(render);
     });
   } else {

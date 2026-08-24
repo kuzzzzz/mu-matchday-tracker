@@ -29,8 +29,6 @@
   }
   #mu-root * { box-sizing: border-box; }
 
-  @font-face { font-family: 'Bebas'; src: local('Arial Narrow Bold'); }
-
   .mu-display {
     font-family: 'Oswald', 'Arial Narrow', sans-serif;
     font-weight: 700;
@@ -232,6 +230,7 @@
     cursor: pointer;
   }
   .save-btn:hover { background: var(--red); }
+  .save-btn:disabled { opacity: 0.5; cursor: wait; }
 
   .stamp-block { position: relative; }
   .final-score {
@@ -300,6 +299,29 @@
     font-size: 11px;
     color: var(--grey);
     margin-top: 30px;
+    line-height: 1.5;
+  }
+  .status-msg .ok { color: var(--green); }
+  .status-msg .warn { color: #c6a15b; }
+  .status-msg .err { color: #c66; }
+
+  .setup-banner {
+    max-width: 640px;
+    margin: 0 auto 24px;
+    background: #1c1812;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--paper);
+    line-height: 1.55;
+  }
+  .setup-banner code {
+    background: #2a2418;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
   }
 
   canvas.confetti-canvas {
@@ -310,281 +332,372 @@
     z-index: 999;
   }
 </style>
-<script>
-(function(){
-  const FIXTURES = [
-    {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
-    {id:2, gw:2, date:'Sun 30 Aug 2026', opp:'Ipswich Town', venue:'H', comp:'PL'},
-    {id:3, gw:3, date:'Sun 6 Sep 2026', opp:'Everton', venue:'A', comp:'PL'},
-    {id:4, gw:4, date:'Sun 13 Sep 2026', opp:'Manchester City', venue:'H', comp:'PL'},
-    {id:5, gw:5, date:'Sun 20 Sep 2026', opp:'Fulham', venue:'A', comp:'PL'},
-    {id:6, gw:6, date:'Sat 10 Oct 2026', opp:'Tottenham', venue:'H', comp:'PL'},
-    {id:7, gw:7, date:'Sun 18 Oct 2026', opp:'Leeds United', venue:'A', comp:'PL'},
-    {id:8, gw:8, date:'Sun 25 Oct 2026', opp:'Bournemouth', venue:'H', comp:'PL'},
-    {id:9, gw:9, date:'Sat 31 Oct 2026', opp:'Chelsea', venue:'A', comp:'PL'},
-    {id:10, gw:10, date:'Sat 7 Nov 2026', opp:'Aston Villa', venue:'H', comp:'PL'},
-    {id:11, gw:11, date:'Sat 21 Nov 2026', opp:'Liverpool', venue:'A', comp:'PL'},
-    {id:12, gw:12, date:'Sat 28 Nov 2026', opp:'Brentford', venue:'H', comp:'PL'},
-    {id:13, gw:13, date:'Wed 2 Dec 2026', opp:'Newcastle', venue:'A', comp:'PL'},
-    {id:14, gw:14, date:'Sat 5 Dec 2026', opp:'Coventry City', venue:'H', comp:'PL'},
-    {id:15, gw:15, date:'Sat 12 Dec 2026', opp:'Crystal Palace', venue:'A', comp:'PL'},
-    {id:16, gw:16, date:'Sat 19 Dec 2026', opp:'Arsenal', venue:'A', comp:'PL'},
-    {id:17, gw:17, date:'Sat 26 Dec 2026', opp:'Nottingham Forest', venue:'H', comp:'PL'},
-    {id:18, gw:18, date:'Wed 30 Dec 2026', opp:'Sunderland', venue:'H', comp:'PL'},
-    {id:19, gw:19, date:'Sat 2 Jan 2027', opp:'Brighton', venue:'A', comp:'PL'},
-    {id:20, gw:20, date:'Wed 6 Jan 2027', opp:'Newcastle', venue:'H', comp:'PL'},
-    {id:21, gw:21, date:'Sat 16 Jan 2027', opp:'Aston Villa', venue:'A', comp:'PL'},
-    {id:22, gw:22, date:'Sat 23 Jan 2027', opp:'Liverpool', venue:'H', comp:'PL'},
-    {id:23, gw:23, date:'Sat 30 Jan 2027', opp:'Brentford', venue:'A', comp:'PL'},
-    {id:24, gw:24, date:'Sat 6 Feb 2027', opp:'Chelsea', venue:'H', comp:'PL'},
-    {id:25, gw:25, date:'Wed 10 Feb 2027', opp:'Brighton', venue:'H', comp:'PL'},
-    {id:26, gw:26, date:'Sat 20 Feb 2027', opp:'Nottingham Forest', venue:'A', comp:'PL'},
-    {id:27, gw:27, date:'Sat 27 Feb 2027', opp:'Arsenal', venue:'H', comp:'PL'},
-    {id:28, gw:28, date:'Wed 3 Mar 2027', opp:'Sunderland', venue:'A', comp:'PL'},
-    {id:29, gw:29, date:'Sat 13 Mar 2027', opp:'Everton', venue:'H', comp:'PL'},
-    {id:30, gw:30, date:'Sat 20 Mar 2027', opp:'Manchester City', venue:'A', comp:'PL'},
-    {id:31, gw:31, date:'Sat 10 Apr 2027', opp:'Hull City', venue:'H', comp:'PL'},
-    {id:32, gw:32, date:'Sat 17 Apr 2027', opp:'Ipswich Town', venue:'A', comp:'PL'},
-    {id:33, gw:33, date:'Sat 24 Apr 2027', opp:'Crystal Palace', venue:'H', comp:'PL'},
-    {id:34, gw:34, date:'Sat 1 May 2027', opp:'Coventry City', venue:'A', comp:'PL'},
-    {id:35, gw:35, date:'Sat 8 May 2027', opp:'Bournemouth', venue:'A', comp:'PL'},
-    {id:36, gw:36, date:'Sat 15 May 2027', opp:'Leeds United', venue:'H', comp:'PL'},
-    {id:37, gw:37, date:'Sun 23 May 2027', opp:'Tottenham', venue:'A', comp:'PL'},
-    {id:38, gw:38, date:'Sun 30 May 2027', opp:'Fulham', venue:'H', comp:'PL'},
-  ];
 
-  const STORAGE_KEY = 'mu-tracker-data-v1';
-  // Shared source of truth (works on GitHub Pages and raw.githubusercontent.com)
-  const DATA_URL = 'https://raw.githubusercontent.com/kuzzzzz/mu-matchday-tracker/main/data.json';
-  let records = {};
-  let filter = 'all';
-  let loadError = null;
-  const root = document.getElementById('mu-root');
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js';
+import { getDatabase, ref, get, set, onValue } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 
-  async function loadData() {
-    // 1) Shared file from the repo (same on every browser)
-    try {
-      const res = await fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-      if (res.ok) {
-        const remote = await res.json();
-        records = remote && typeof remote === 'object' ? remote : {};
-      } else {
-        loadError = 'Could not load shared data (' + res.status + ')';
-      }
-    } catch (e) {
-      loadError = 'Offline or blocked from loading shared data';
+// ═══════════════════════════════════════════════════════════
+// 1. PASTE YOUR FIREBASE CONFIG BELOW (from Firebase Console)
+//    Project settings → Your apps → Web app → Config
+// ═══════════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+// ═══════════════════════════════════════════════════════════
+
+const FIXTURES = [
+  {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
+  {id:2, gw:2, date:'Sun 30 Aug 2026', opp:'Ipswich Town', venue:'H', comp:'PL'},
+  {id:3, gw:3, date:'Sun 6 Sep 2026', opp:'Everton', venue:'A', comp:'PL'},
+  {id:4, gw:4, date:'Sun 13 Sep 2026', opp:'Manchester City', venue:'H', comp:'PL'},
+  {id:5, gw:5, date:'Sun 20 Sep 2026', opp:'Fulham', venue:'A', comp:'PL'},
+  {id:6, gw:6, date:'Sat 10 Oct 2026', opp:'Tottenham', venue:'H', comp:'PL'},
+  {id:7, gw:7, date:'Sun 18 Oct 2026', opp:'Leeds United', venue:'A', comp:'PL'},
+  {id:8, gw:8, date:'Sun 25 Oct 2026', opp:'Bournemouth', venue:'H', comp:'PL'},
+  {id:9, gw:9, date:'Sat 31 Oct 2026', opp:'Chelsea', venue:'A', comp:'PL'},
+  {id:10, gw:10, date:'Sat 7 Nov 2026', opp:'Aston Villa', venue:'H', comp:'PL'},
+  {id:11, gw:11, date:'Sat 21 Nov 2026', opp:'Liverpool', venue:'A', comp:'PL'},
+  {id:12, gw:12, date:'Sat 28 Nov 2026', opp:'Brentford', venue:'H', comp:'PL'},
+  {id:13, gw:13, date:'Wed 2 Dec 2026', opp:'Newcastle', venue:'A', comp:'PL'},
+  {id:14, gw:14, date:'Sat 5 Dec 2026', opp:'Coventry City', venue:'H', comp:'PL'},
+  {id:15, gw:15, date:'Sat 12 Dec 2026', opp:'Crystal Palace', venue:'A', comp:'PL'},
+  {id:16, gw:16, date:'Sat 19 Dec 2026', opp:'Arsenal', venue:'A', comp:'PL'},
+  {id:17, gw:17, date:'Sat 26 Dec 2026', opp:'Nottingham Forest', venue:'H', comp:'PL'},
+  {id:18, gw:18, date:'Wed 30 Dec 2026', opp:'Sunderland', venue:'H', comp:'PL'},
+  {id:19, gw:19, date:'Sat 2 Jan 2027', opp:'Brighton', venue:'A', comp:'PL'},
+  {id:20, gw:20, date:'Wed 6 Jan 2027', opp:'Newcastle', venue:'H', comp:'PL'},
+  {id:21, gw:21, date:'Sat 16 Jan 2027', opp:'Aston Villa', venue:'A', comp:'PL'},
+  {id:22, gw:22, date:'Sat 23 Jan 2027', opp:'Liverpool', venue:'H', comp:'PL'},
+  {id:23, gw:23, date:'Sat 30 Jan 2027', opp:'Brentford', venue:'A', comp:'PL'},
+  {id:24, gw:24, date:'Sat 6 Feb 2027', opp:'Chelsea', venue:'H', comp:'PL'},
+  {id:25, gw:25, date:'Wed 10 Feb 2027', opp:'Brighton', venue:'H', comp:'PL'},
+  {id:26, gw:26, date:'Sat 20 Feb 2027', opp:'Nottingham Forest', venue:'A', comp:'PL'},
+  {id:27, gw:27, date:'Sat 27 Feb 2027', opp:'Arsenal', venue:'H', comp:'PL'},
+  {id:28, gw:28, date:'Wed 3 Mar 2027', opp:'Sunderland', venue:'A', comp:'PL'},
+  {id:29, gw:29, date:'Sat 13 Mar 2027', opp:'Everton', venue:'H', comp:'PL'},
+  {id:30, gw:30, date:'Sat 20 Mar 2027', opp:'Manchester City', venue:'A', comp:'PL'},
+  {id:31, gw:31, date:'Sat 10 Apr 2027', opp:'Hull City', venue:'H', comp:'PL'},
+  {id:32, gw:32, date:'Sat 17 Apr 2027', opp:'Ipswich Town', venue:'A', comp:'PL'},
+  {id:33, gw:33, date:'Sat 24 Apr 2027', opp:'Crystal Palace', venue:'H', comp:'PL'},
+  {id:34, gw:34, date:'Sat 1 May 2027', opp:'Coventry City', venue:'A', comp:'PL'},
+  {id:35, gw:35, date:'Sat 8 May 2027', opp:'Bournemouth', venue:'A', comp:'PL'},
+  {id:36, gw:36, date:'Sat 15 May 2027', opp:'Leeds United', venue:'H', comp:'PL'},
+  {id:37, gw:37, date:'Sun 23 May 2027', opp:'Tottenham', venue:'A', comp:'PL'},
+  {id:38, gw:38, date:'Sun 30 May 2027', opp:'Fulham', venue:'H', comp:'PL'},
+];
+
+const STORAGE_KEY = 'mu-tracker-data-v1';
+const DATA_URL = 'https://raw.githubusercontent.com/kuzzzzz/mu-matchday-tracker/main/data.json';
+const DB_PATH = 'records';
+
+let records = {};
+let filter = 'all';
+let syncStatus = 'loading'; // loading | live | local | error
+let statusDetail = '';
+let db = null;
+let recordsRef = null;
+const root = document.getElementById('mu-root');
+
+const configReady = firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith('YOUR_');
+
+if (configReady) {
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    recordsRef = ref(db, DB_PATH);
+  } catch (e) {
+    console.error(e);
+    syncStatus = 'error';
+    statusDetail = e.message || 'Firebase init failed';
+  }
+}
+
+async function loadFromGithubFallback() {
+  try {
+    const res = await fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) {
+      const remote = await res.json();
+      if (remote && typeof remote === 'object') records = remote;
     }
+  } catch (_) {}
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) records = { ...records, ...JSON.parse(raw) };
+  } catch (_) {}
+}
 
-    // 2) Merge any local edits (this device only) on top
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const local = JSON.parse(raw);
-        records = { ...records, ...local };
+async function loadData() {
+  if (configReady && recordsRef) {
+    // Live sync: any change on any device updates this page
+    onValue(recordsRef, (snap) => {
+      const val = snap.val();
+      records = val && typeof val === 'object' ? val : {};
+      // Seed GW1 if the DB is empty
+      if (!records['1'] && !records[1]) {
+        records = {
+          '1': {
+            mu: 0,
+            opp: 2,
+            highlight: "Hull City 2-0 Man United. Goals: Semi Ajayi 17', Nobel Mendy 38'. Shock opening-day defeat at MKM Stadium – first league loss to Hull in 52 years. Set-piece vulnerability cost United."
+          }
+        };
+        set(recordsRef, records).catch(() => {});
       }
-    } catch (e) {}
-
+      // Normalise keys to strings
+      const normalised = {};
+      Object.keys(records).forEach(k => { normalised[String(k)] = records[k]; });
+      records = normalised;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
+      syncStatus = 'live';
+      statusDetail = 'Live sync via Firebase — same on every browser';
+      render();
+    }, (err) => {
+      console.error(err);
+      syncStatus = 'error';
+      statusDetail = err.message || 'Could not read Firebase';
+      loadFromGithubFallback().then(render);
+    });
+  } else {
+    syncStatus = 'local';
+    statusDetail = 'Firebase not configured — using local + repo fallback';
+    await loadFromGithubFallback();
     render();
   }
+}
 
-  async function saveData() {
+async function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
+  if (configReady && recordsRef) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      await set(recordsRef, records);
+      syncStatus = 'live';
+      statusDetail = 'Saved to Firebase — visible on all browsers';
     } catch (e) {
-      console.error('Local save failed', e);
+      console.error(e);
+      syncStatus = 'error';
+      statusDetail = e.message || 'Write failed (check Database rules)';
+      render();
+      throw e;
     }
-    // Note: permanent shared updates go through the repo (data.json).
-    // Tell Grok "log GW# result X-Y" and it will update data.json for everyone.
   }
+}
 
-  function resultFor(rec) {
-    if (rec.mu > rec.opp) return 'W';
-    if (rec.mu < rec.opp) return 'L';
-    return 'D';
-  }
+function resultFor(rec) {
+  if (rec.mu > rec.opp) return 'W';
+  if (rec.mu < rec.opp) return 'L';
+  return 'D';
+}
 
-  function computeStats() {
-    let p=0,w=0,d=0,l=0,gf=0,ga=0;
-    const streak = [];
-    FIXTURES.forEach(f => {
-      const rec = records[f.id];
-      if (rec && rec.mu !== undefined && rec.opp !== undefined) {
-        p++; gf += Number(rec.mu); ga += Number(rec.opp);
-        const r = resultFor(rec);
-        if (r==='W') w++; else if (r==='D') d++; else l++;
-        streak.push(r);
-      }
-    });
-    return {p,w,d,l,gf,ga,gd:gf-ga,pts:w*3+d, streak: streak.slice(-6)};
-  }
-
-  function fireConfetti() {
-    const canvas = document.createElement('canvas');
-    canvas.className = 'confetti-canvas';
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    document.body.appendChild(canvas);
-    const ctx = canvas.getContext('2d');
-    const colors = ['#C8102E', '#C6A15B', '#EFE4C8', '#2F5233'];
-    const pieces = Array.from({length: 90}, () => ({
-      x: Math.random()*canvas.width,
-      y: -20 - Math.random()*canvas.height*0.3,
-      vy: 2 + Math.random()*3,
-      vx: -1.5 + Math.random()*3,
-      size: 4 + Math.random()*5,
-      color: colors[Math.floor(Math.random()*colors.length)],
-      rot: Math.random()*360,
-      vr: -6 + Math.random()*12
-    }));
-    let frame = 0;
-    function tick() {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      pieces.forEach(p => {
-        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rot * Math.PI/180);
-        ctx.fillStyle = p.color;
-        ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
-        ctx.restore();
-      });
-      frame++;
-      if (frame < 110) requestAnimationFrame(tick);
-      else canvas.remove();
-    }
-    tick();
-  }
-
-  function render() {
-    const stats = computeStats();
-    const visible = FIXTURES.filter(f => {
-      const played = records[f.id] && records[f.id].mu !== undefined;
-      if (filter === 'played') return played;
-      if (filter === 'upcoming') return !played;
-      return true;
-    });
-
-    root.innerHTML = `
-      <div class="mu-header">
-        <div class="eyebrow">Traouse Presents</div>
-        <h1 class="mu-display">The Red <span>Devils'</span> Matchday Log</h1>
-        <div class="season">2026/27 Premier League &middot; Champions League fixtures land after the Aug 27 draw</div>
-      </div>
-
-      <div class="scoreboard">
-        <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
-        <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
-        <div class="flip"><div class="val">${stats.d}</div><div class="lab">Drawn</div></div>
-        <div class="flip"><div class="val">${stats.l}</div><div class="lab">Lost</div></div>
-        <div class="flip"><div class="val">${stats.gf}</div><div class="lab">Goals For</div></div>
-        <div class="flip"><div class="val">${stats.ga}</div><div class="lab">Goals Against</div></div>
-        <div class="flip"><div class="val">${stats.gd>0?'+':''}${stats.gd}</div><div class="lab">Gl Diff</div></div>
-        <div class="flip"><div class="val">${stats.pts}</div><div class="lab">Points</div></div>
-      </div>
-
-      <div class="streak-line">
-        Current form
-        <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results logged yet</span>'}</span>
-      </div>
-
-      <div class="tabs">
-        <button class="tab ${filter==='all'?'active':''}" data-f="all">All 38</button>
-        <button class="tab ${filter==='played'?'active':''}" data-f="played">Played (${stats.p})</button>
-        <button class="tab ${filter==='upcoming'?'active':''}" data-f="upcoming">Upcoming (${38-stats.p})</button>
-      </div>
-
-      <div class="tickets">
-        ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
-      </div>
-
-      <div class="status-msg">
-        Shared results load from the repo (data.json) — same on every browser.<br>
-        Stamping a result saves on this device; tell Grok to log it for permanent shared update.
-        ${loadError ? '<br><span style="color:#c66">' + loadError + '</span>' : ''}
-      </div>
-    `;
-
-    root.querySelectorAll('.tab').forEach(btn => {
-      btn.addEventListener('click', () => { filter = btn.dataset.f; render(); });
-    });
-
-    visible.forEach(f => {
-      const saveBtn = root.querySelector(`#save-${f.id}`);
-      const editBtn = root.querySelector(`#edit-${f.id}`);
-      if (saveBtn) {
-        saveBtn.addEventListener('click', async () => {
-          const muVal = root.querySelector(`#mu-${f.id}`).value;
-          const oppVal = root.querySelector(`#opp-${f.id}`).value;
-          const hlVal = root.querySelector(`#hl-${f.id}`).value;
-          if (muVal === '' || oppVal === '') return;
-          records[f.id] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal };
-          await saveData();
-          render();
-          if (resultFor(records[f.id]) === 'W') fireConfetti();
-        });
-      }
-      if (editBtn) {
-        editBtn.addEventListener('click', () => {
-          delete records[f.id].mu;
-          delete records[f.id].opp;
-          saveData();
-          render();
-        });
-      }
-    });
-  }
-
-  function renderTicket(f) {
-    const rec = records[f.id];
-    const played = rec && rec.mu !== undefined;
-    const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
-
-    if (played) {
+function computeStats() {
+  let p=0,w=0,d=0,l=0,gf=0,ga=0;
+  const streak = [];
+  FIXTURES.forEach(f => {
+    const rec = records[f.id] || records[String(f.id)];
+    if (rec && rec.mu !== undefined && rec.opp !== undefined) {
+      p++; gf += Number(rec.mu); ga += Number(rec.opp);
       const r = resultFor(rec);
-      return `
-        <div class="ticket">
-          <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
-          <div class="body stamp-block">
-            <div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div>
-            <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
-            <div class="date">${f.date} &middot; ${venueLabel}</div>
-            <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
-            <div class="final-score">${rec.mu} &ndash; ${rec.opp}</div>
-            <div class="highlight-display ${rec.highlight ? '' : 'empty'}">${rec.highlight ? escapeHtml(rec.highlight) : 'No highlight noted.'}</div>
-            <button class="edit-link" id="edit-${f.id}">Edit result</button>
-          </div>
-        </div>
-      `;
+      if (r==='W') w++; else if (r==='D') d++; else l++;
+      streak.push(r);
     }
+  });
+  return {p,w,d,l,gf,ga,gd:gf-ga,pts:w*3+d, streak: streak.slice(-6)};
+}
 
+function fireConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.className = 'confetti-canvas';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  const colors = ['#C8102E', '#C6A15B', '#EFE4C8', '#2F5233'];
+  const pieces = Array.from({length: 90}, () => ({
+    x: Math.random()*canvas.width,
+    y: -20 - Math.random()*canvas.height*0.3,
+    vy: 2 + Math.random()*3,
+    vx: -1.5 + Math.random()*3,
+    size: 4 + Math.random()*5,
+    color: colors[Math.floor(Math.random()*colors.length)],
+    rot: Math.random()*360,
+    vr: -6 + Math.random()*12
+  }));
+  let frame = 0;
+  function tick() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 110) requestAnimationFrame(tick);
+    else canvas.remove();
+  }
+  tick();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function renderTicket(f) {
+  const rec = records[f.id] || records[String(f.id)];
+  const played = rec && rec.mu !== undefined;
+  const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
+
+  if (played) {
+    const r = resultFor(rec);
     return `
       <div class="ticket">
         <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
-        <div class="body">
+        <div class="body stamp-block">
+          <div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div>
           <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
           <div class="date">${f.date} &middot; ${venueLabel}</div>
           <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
-          <div class="score-form">
-            <span class="mu-mono">MUFC</span>
-            <input type="number" min="0" id="mu-${f.id}" placeholder="-" />
-            <span class="vs">:</span>
-            <input type="number" min="0" id="opp-${f.id}" placeholder="-" />
-            <span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span>
-          </div>
-          <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, Man of the Match...">${rec && rec.highlight ? escapeHtml(rec.highlight) : ''}</textarea>
-          <button class="save-btn" id="save-${f.id}">Stamp result</button>
+          <div class="final-score">${rec.mu} &ndash; ${rec.opp}</div>
+          <div class="highlight-display ${rec.highlight ? '' : 'empty'}">${rec.highlight ? escapeHtml(rec.highlight) : 'No highlight noted.'}</div>
+          <button class="edit-link" id="edit-${f.id}">Edit result</button>
         </div>
       </div>
     `;
   }
 
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  return `
+    <div class="ticket">
+      <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
+      <div class="body">
+        <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
+        <div class="date">${f.date} &middot; ${venueLabel}</div>
+        <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
+        <div class="score-form">
+          <span class="mu-mono">MUFC</span>
+          <input type="number" min="0" id="mu-${f.id}" placeholder="-" />
+          <span class="vs">:</span>
+          <input type="number" min="0" id="opp-${f.id}" placeholder="-" />
+          <span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span>
+        </div>
+        <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, Man of the Match...">${rec && rec.highlight ? escapeHtml(rec.highlight) : ''}</textarea>
+        <button class="save-btn" id="save-${f.id}">Stamp result</button>
+      </div>
+    </div>
+  `;
+}
 
-  loadData();
-})();
+function render() {
+  const stats = computeStats();
+  const visible = FIXTURES.filter(f => {
+    const rec = records[f.id] || records[String(f.id)];
+    const played = rec && rec.mu !== undefined;
+    if (filter === 'played') return played;
+    if (filter === 'upcoming') return !played;
+    return true;
+  });
+
+  const statusClass = syncStatus === 'live' ? 'ok' : syncStatus === 'error' ? 'err' : 'warn';
+
+  root.innerHTML = `
+    <div class="mu-header">
+      <div class="eyebrow">Traouse Presents</div>
+      <h1 class="mu-display">The Red <span>Devils'</span> Matchday Log</h1>
+      <div class="season">2026/27 Premier League &middot; Champions League fixtures land after the Aug 27 draw</div>
+    </div>
+
+    ${!configReady ? `
+    <div class="setup-banner">
+      <strong>One-time setup for live sync across all browsers</strong><br>
+      1. Go to <a href="https://console.firebase.google.com" target="_blank" rel="noopener" style="color:var(--gold)">console.firebase.google.com</a> → Create project<br>
+      2. Build → Realtime Database → Create database → start in <strong>test mode</strong> (or set rules below)<br>
+      3. Project settings (gear) → Your apps → Web → register app → copy the <code>firebaseConfig</code><br>
+      4. Paste it into <code>index.html</code> (the block at the top of the script) and commit<br>
+      5. Database rules (for personal use): <code>{ "rules": { ".read": true, ".write": true } }</code>
+    </div>` : ''}
+
+    <div class="scoreboard">
+      <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
+      <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
+      <div class="flip"><div class="val">${stats.d}</div><div class="lab">Drawn</div></div>
+      <div class="flip"><div class="val">${stats.l}</div><div class="lab">Lost</div></div>
+      <div class="flip"><div class="val">${stats.gf}</div><div class="lab">Goals For</div></div>
+      <div class="flip"><div class="val">${stats.ga}</div><div class="lab">Goals Against</div></div>
+      <div class="flip"><div class="val">${stats.gd>0?'+':''}${stats.gd}</div><div class="lab">Gl Diff</div></div>
+      <div class="flip"><div class="val">${stats.pts}</div><div class="lab">Points</div></div>
+    </div>
+
+    <div class="streak-line">
+      Current form
+      <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results logged yet</span>'}</span>
+    </div>
+
+    <div class="tabs">
+      <button class="tab ${filter==='all'?'active':''}" data-f="all">All 38</button>
+      <button class="tab ${filter==='played'?'active':''}" data-f="played">Played (${stats.p})</button>
+      <button class="tab ${filter==='upcoming'?'active':''}" data-f="upcoming">Upcoming (${38-stats.p})</button>
+    </div>
+
+    <div class="tickets">
+      ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
+    </div>
+
+    <div class="status-msg">
+      <span class="${statusClass}">${statusDetail || (syncStatus === 'loading' ? 'Loading…' : '')}</span>
+    </div>
+  `;
+
+  root.querySelectorAll('.tab').forEach(btn => {
+    btn.addEventListener('click', () => { filter = btn.dataset.f; render(); });
+  });
+
+  visible.forEach(f => {
+    const saveBtn = root.querySelector(`#save-${f.id}`);
+    const editBtn = root.querySelector(`#edit-${f.id}`);
+    if (saveBtn) {
+      saveBtn.addEventListener('click', async () => {
+        const muVal = root.querySelector(`#mu-${f.id}`).value;
+        const oppVal = root.querySelector(`#opp-${f.id}`).value;
+        const hlVal = root.querySelector(`#hl-${f.id}`).value;
+        if (muVal === '' || oppVal === '') return;
+        saveBtn.disabled = true;
+        records[String(f.id)] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal };
+        try {
+          await saveData();
+          render();
+          if (resultFor(records[String(f.id)]) === 'W') fireConfetti();
+        } catch (_) {
+          saveBtn.disabled = false;
+        }
+      });
+    }
+    if (editBtn) {
+      editBtn.addEventListener('click', async () => {
+        const key = String(f.id);
+        if (records[key]) {
+          delete records[key].mu;
+          delete records[key].opp;
+          // Keep highlight if present, or remove whole entry
+          if (!records[key].highlight) delete records[key];
+        }
+        await saveData();
+        render();
+      });
+    }
+  });
+}
+
+loadData();
 </script>
-</body></html>
+</body>
+</html>

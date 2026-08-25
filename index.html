@@ -28,309 +28,80 @@
     box-sizing: border-box;
   }
   #mu-root * { box-sizing: border-box; }
-
-  .mu-display {
-    font-family: 'Oswald', 'Arial Narrow', sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-  }
+  .mu-display { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
   .mu-mono { font-family: 'IBM Plex Mono', monospace; }
-
-  .mu-header {
-    text-align: center;
-    margin-bottom: 22px;
-  }
-  .mu-header .eyebrow {
-    color: var(--gold);
-    font-size: 12px;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-  .mu-header h1 {
-    font-size: clamp(28px, 6vw, 42px);
-    margin: 0;
-    color: var(--paper);
-  }
+  .mu-header { text-align: center; margin-bottom: 22px; }
+  .mu-header .eyebrow { color: var(--gold); font-size: 12px; letter-spacing: 0.35em; text-transform: uppercase; margin-bottom: 6px; }
+  .mu-header h1 { font-size: clamp(28px, 6vw, 42px); margin: 0; color: var(--paper); }
   .mu-header h1 span { color: var(--red); }
-  .mu-header .season {
-    color: var(--grey);
-    font-size: 13px;
-    margin-top: 4px;
-  }
-
-  .scoreboard {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    max-width: 640px;
-    margin: 24px auto 30px;
-  }
-  @media (min-width: 560px) {
-    .scoreboard { grid-template-columns: repeat(8, 1fr); }
-  }
-  .flip {
-    background: #1c1812;
-    border: 1px solid #33291a;
-    border-radius: 6px;
-    padding: 10px 4px;
-    text-align: center;
-  }
-  .flip .val {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--gold);
-  }
-  .flip .lab {
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--grey);
-    margin-top: 2px;
-    text-transform: uppercase;
-  }
-
-  .streak-line {
-    text-align: center;
-    color: var(--paper);
-    font-size: 13px;
-    margin-bottom: 26px;
-  }
+  .mu-header .season { color: var(--grey); font-size: 13px; margin-top: 4px; }
+  .scoreboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 640px; margin: 24px auto 30px; }
+  @media (min-width: 560px) { .scoreboard { grid-template-columns: repeat(8, 1fr); } }
+  .flip { background: #1c1812; border: 1px solid #33291a; border-radius: 6px; padding: 10px 4px; text-align: center; }
+  .flip .val { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 700; color: var(--gold); }
+  .flip .lab { font-size: 9px; letter-spacing: 0.15em; color: var(--grey); margin-top: 2px; text-transform: uppercase; }
+  .streak-line { text-align: center; color: var(--paper); font-size: 13px; margin-bottom: 26px; }
   .streak-line .pips { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 8px; }
-  .pip {
-    width: 18px; height: 18px; border-radius: 50%;
-    display: inline-flex; align-items: center; justify-content: center;
-    font-size: 10px; font-weight: 700; color: #fff;
-  }
+  .pip { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; }
   .pip.W { background: var(--green); }
   .pip.D { background: var(--grey); }
   .pip.L { background: var(--red-dark); }
-
-  .tabs {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    margin-bottom: 22px;
-    flex-wrap: wrap;
+  .buildup {
+    max-width: 1100px; margin: 0 auto 28px; display: grid;
+    grid-template-columns: 1fr; gap: 16px;
   }
-  .tab {
-    background: transparent;
-    border: 1px solid #3a3226;
-    color: var(--grey);
-    padding: 7px 16px;
-    border-radius: 999px;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: inherit;
+  @media (min-width: 720px) { .buildup { grid-template-columns: 1.1fr 1fr; } }
+  .panel {
+    background: #1c1812; border: 1px solid #33291a; border-radius: 10px; padding: 16px 18px;
   }
-  .tab.active {
-    background: var(--red);
-    border-color: var(--red);
-    color: #fff;
+  .panel h2 {
+    font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold); margin: 0 0 12px;
   }
-
-  .tickets {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 18px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
-  .ticket {
-    position: relative;
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-    display: flex;
-  }
-  .ticket .stub {
-    width: 34px;
-    background: var(--paper-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    writing-mode: vertical-rl;
-    font-family: 'Oswald', sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--grey);
-    text-transform: uppercase;
-    border-right: 2px dashed #b8a97e;
-    flex-shrink: 0;
-  }
+  .standings-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .standings-table th { text-align: left; color: var(--grey); font-weight: 500; padding: 4px 6px; border-bottom: 1px solid #33291a; }
+  .standings-table td { padding: 5px 6px; border-bottom: 1px solid #2a2418; }
+  .standings-table tr.mu { background: rgba(200,16,46,0.18); color: var(--paper); }
+  .standings-table .pos { color: var(--grey); width: 28px; }
+  .standings-table .pts { font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--gold); text-align: right; }
+  .standings-table .num { font-family: 'IBM Plex Mono', monospace; text-align: right; color: var(--paper); }
+  .next-match-line { font-family: 'Oswald', sans-serif; font-size: 18px; text-transform: uppercase; margin-bottom: 8px; }
+  .next-meta { font-size: 12px; color: var(--grey); margin-bottom: 12px; }
+  .buildup-notes { font-size: 13px; line-height: 1.55; color: var(--paper); }
+  .buildup-notes li { margin-bottom: 6px; }
+  .tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
+  .tab { background: transparent; border: 1px solid #3a3226; color: var(--grey); padding: 7px 16px; border-radius: 999px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .tab.active { background: var(--red); border-color: var(--red); color: #fff; }
+  .tickets { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; max-width: 1100px; margin: 0 auto; }
+  .ticket { position: relative; background: var(--paper); color: var(--ink); border-radius: 10px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.35); display: flex; }
+  .ticket .stub { width: 34px; background: var(--paper-dark); display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: 0.2em; color: var(--grey); text-transform: uppercase; border-right: 2px dashed #b8a97e; flex-shrink: 0; }
   .ticket .body { padding: 14px 14px 16px; flex: 1; min-width: 0; }
-
-  .ticket .row1 {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 2px;
-  }
+  .ticket .row1 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
   .ticket .gw { font-size: 11px; color: var(--grey); letter-spacing: 0.1em; }
   .ticket .comp { font-size: 10px; color: var(--red); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
   .ticket .date { font-size: 11px; color: var(--grey); margin-bottom: 8px; }
-
-  .fixture-line {
-    font-family: 'Oswald', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    line-height: 1.25;
-  }
-  .fixture-line .venue-tag {
-    font-size: 10px;
-    background: var(--ink);
-    color: var(--paper);
-    padding: 1px 6px;
-    border-radius: 3px;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
-
+  .fixture-line { font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; line-height: 1.25; }
+  .fixture-line .venue-tag { font-size: 10px; background: var(--ink); color: var(--paper); padding: 1px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
   .score-form { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-  .score-form input[type=number] {
-    width: 46px;
-    padding: 6px 4px;
-    text-align: center;
-    border: 1px solid #b8a97e;
-    border-radius: 5px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 15px;
-    background: #fffdf7;
-  }
+  .score-form input[type=number] { width: 46px; padding: 6px 4px; text-align: center; border: 1px solid #b8a97e; border-radius: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; background: #fffdf7; }
   .score-form .vs { font-size: 11px; color: var(--grey); }
-  .highlight-input {
-    width: 100%;
-    resize: vertical;
-    min-height: 42px;
-    border: 1px solid #b8a97e;
-    border-radius: 5px;
-    padding: 6px 8px;
-    font-family: inherit;
-    font-size: 12px;
-    background: #fffdf7;
-    margin-bottom: 8px;
-  }
-  .save-btn {
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 7px 14px;
-    border-radius: 5px;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-  }
+  .highlight-input { width: 100%; resize: vertical; min-height: 42px; border: 1px solid #b8a97e; border-radius: 5px; padding: 6px 8px; font-family: inherit; font-size: 12px; background: #fffdf7; margin-bottom: 8px; }
+  .save-btn { background: var(--ink); color: var(--paper); border: none; padding: 7px 14px; border-radius: 5px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
   .save-btn:hover { background: var(--red); }
   .save-btn:disabled { opacity: 0.5; cursor: wait; }
-
   .stamp-block { position: relative; }
-  .final-score {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 30px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 6px 0 8px;
-  }
-  .result-stamp {
-    position: absolute;
-    top: -6px;
-    right: -6px;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    border: 3px solid;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 20px;
-    transform: rotate(12deg);
-    opacity: 0.9;
-  }
+  .final-score { font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin: 6px 0 8px; }
+  .result-stamp { position: absolute; top: -6px; right: -6px; width: 54px; height: 54px; border-radius: 50%; border: 3px solid; display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 20px; transform: rotate(12deg); opacity: 0.9; }
   .result-stamp.W { color: var(--green); border-color: var(--green); }
   .result-stamp.D { color: var(--grey); border-color: var(--grey); }
   .result-stamp.L { color: var(--red-dark); border-color: var(--red-dark); }
-
-  .highlight-display {
-    font-size: 12.5px;
-    color: #3a3226;
-    background: rgba(0,0,0,0.05);
-    border-left: 3px solid var(--gold);
-    padding: 6px 9px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    white-space: pre-wrap;
-  }
+  .highlight-display { font-size: 12.5px; color: #3a3226; background: rgba(0,0,0,0.05); border-left: 3px solid var(--gold); padding: 6px 9px; border-radius: 4px; margin-bottom: 8px; white-space: pre-wrap; }
   .highlight-display.empty { color: var(--grey); font-style: italic; }
-
-  .edit-link {
-    font-size: 11px;
-    color: var(--red);
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    text-decoration: underline;
-    font-family: inherit;
-  }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    color: var(--grey);
-    padding: 40px 0;
-    font-size: 13px;
-  }
-
-  .status-msg {
-    text-align: center;
-    font-size: 11px;
-    color: var(--grey);
-    margin-top: 30px;
-    line-height: 1.5;
-  }
-  .status-msg .ok { color: var(--green); }
-  .status-msg .warn { color: #c6a15b; }
-  .status-msg .err { color: #c66; }
-
-  .setup-banner {
-    max-width: 640px;
-    margin: 0 auto 24px;
-    background: #1c1812;
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    padding: 14px 16px;
-    font-size: 12px;
-    color: var(--paper);
-    line-height: 1.55;
-  }
-  .setup-banner code {
-    background: #2a2418;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-  }
-
-  canvas.confetti-canvas {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 999;
-  }
+  .auto-tag { font-size: 10px; color: var(--grey); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .edit-link { font-size: 11px; color: var(--red); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; font-family: inherit; }
+  .empty-state { grid-column: 1 / -1; text-align: center; color: var(--grey); padding: 40px 0; font-size: 13px; }
+  .err-banner { max-width: 640px; margin: 0 auto 16px; text-align: center; font-size: 12px; color: #c66; }
+  canvas.confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; }
 </style>
 
 <script type="module">
@@ -347,6 +118,9 @@ const firebaseConfig = {
   appId: "1:723395600000:web:ee1a72c1288ad7c7345065",
   measurementId: "G-NRK67M2WTE"
 };
+
+const API_BASE = 'https://worldcup26.ir/get/soccer/eng.1';
+const MONTHS = { Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11 };
 
 const FIXTURES = [
   {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
@@ -390,92 +164,47 @@ const FIXTURES = [
 ];
 
 const STORAGE_KEY = 'mu-tracker-data-v1';
-const DATA_URL = 'https://raw.githubusercontent.com/kuzzzzz/mu-matchday-tracker/main/data.json';
 const DB_PATH = 'records';
+const root = document.getElementById('mu-root');
 
 let records = {};
 let filter = 'all';
-let syncStatus = 'loading';
-let statusDetail = '';
-let db = null;
+let standings = [];
+let muTable = null;
+let loadError = null;
+let autoImportDone = false;
 let recordsRef = null;
-const root = document.getElementById('mu-root');
 
 try {
   const app = initializeApp(firebaseConfig);
-  db = getDatabase(app);
-  recordsRef = ref(db, DB_PATH);
+  recordsRef = ref(getDatabase(app), DB_PATH);
 } catch (e) {
-  console.error(e);
-  syncStatus = 'error';
-  statusDetail = e.message || 'Firebase init failed';
+  loadError = e.message || 'Firebase init failed';
 }
 
-async function loadFromGithubFallback() {
-  try {
-    const res = await fetch(DATA_URL + '?t=' + Date.now(), { cache: 'no-store' });
-    if (res.ok) {
-      const remote = await res.json();
-      if (remote && typeof remote === 'object') records = remote;
-    }
-  } catch (_) {}
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) records = { ...records, ...JSON.parse(raw) };
-  } catch (_) {}
+function parseFixtureDate(str) {
+  const parts = str.trim().split(/\s+/);
+  const day = parseInt(parts[1], 10);
+  const mon = MONTHS[parts[2]];
+  const year = parseInt(parts[3], 10);
+  return new Date(year, mon, day);
 }
-
-async function loadData() {
-  if (recordsRef) {
-    onValue(recordsRef, (snap) => {
-      const val = snap.val();
-      records = val && typeof val === 'object' ? val : {};
-      if (!records['1'] && !records[1]) {
-        records = {
-          '1': {
-            mu: 0,
-            opp: 2,
-            highlight: "Hull City 2-0 Man United. Goals: Semi Ajayi 17', Nobel Mendy 38'. Shock opening-day defeat at MKM Stadium – first league loss to Hull in 52 years. Set-piece vulnerability cost United."
-          }
-        };
-        set(recordsRef, records).catch(() => {});
-      }
-      const normalised = {};
-      Object.keys(records).forEach(k => { normalised[String(k)] = records[k]; });
-      records = normalised;
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
-      syncStatus = 'live';
-      statusDetail = 'Live sync via Firebase — same on every browser';
-      render();
-    }, (err) => {
-      console.error(err);
-      syncStatus = 'error';
-      statusDetail = err.message || 'Could not read Firebase — check rules';
-      loadFromGithubFallback().then(render);
-    });
-  } else {
-    syncStatus = 'local';
-    statusDetail = 'Firebase not ready — using local + repo fallback';
-    await loadFromGithubFallback();
-    render();
-  }
+function toYmd(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}${m}${day}`;
 }
-
-async function saveData() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
-  if (recordsRef) {
-    try {
-      await set(recordsRef, records);
-      syncStatus = 'live';
-      statusDetail = 'Saved to Firebase — visible on all browsers';
-    } catch (e) {
-      console.error(e);
-      syncStatus = 'error';
-      statusDetail = e.message || 'Write failed (check Database rules)';
-      render();
-      throw e;
-    }
-  }
+function normalizeName(s) {
+  return (s || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]/g, '');
+}
+function namesMatch(a, b) {
+  const x = normalizeName(a), y = normalizeName(b);
+  return x.includes(y) || y.includes(x) || x === y;
+}
+function isManUnited(team) {
+  const n = (team?.name || team?.displayName || team?.abbreviation || '').toLowerCase();
+  return n.includes('manchester united') || n === 'man united' || n === 'man utd' || n === 'mun' || n === 'man';
 }
 
 function resultFor(rec) {
@@ -483,7 +212,6 @@ function resultFor(rec) {
   if (rec.mu < rec.opp) return 'L';
   return 'D';
 }
-
 function computeStats() {
   let p=0,w=0,d=0,l=0,gf=0,ga=0;
   const streak = [];
@@ -498,7 +226,11 @@ function computeStats() {
   });
   return {p,w,d,l,gf,ga,gd:gf-ga,pts:w*3+d, streak: streak.slice(-6)};
 }
-
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
 function fireConfetti() {
   const canvas = document.createElement('canvas');
   canvas.className = 'confetti-canvas';
@@ -507,70 +239,222 @@ function fireConfetti() {
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
   const colors = ['#C8102E', '#C6A15B', '#EFE4C8', '#2F5233'];
-  const pieces = Array.from({length: 90}, () => ({
-    x: Math.random()*canvas.width,
-    y: -20 - Math.random()*canvas.height*0.3,
-    vy: 2 + Math.random()*3,
-    vx: -1.5 + Math.random()*3,
-    size: 4 + Math.random()*5,
-    color: colors[Math.floor(Math.random()*colors.length)],
-    rot: Math.random()*360,
-    vr: -6 + Math.random()*12
+  const pieces = Array.from({length: 80}, () => ({
+    x: Math.random()*canvas.width, y: -20 - Math.random()*canvas.height*0.3,
+    vy: 2 + Math.random()*3, vx: -1.5 + Math.random()*3,
+    size: 4 + Math.random()*5, color: colors[Math.floor(Math.random()*colors.length)],
+    rot: Math.random()*360, vr: -6 + Math.random()*12
   }));
   let frame = 0;
-  function tick() {
+  (function tick() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     pieces.forEach(p => {
       p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI/180);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
-      ctx.restore();
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6); ctx.restore();
     });
-    frame++;
-    if (frame < 110) requestAnimationFrame(tick);
-    else canvas.remove();
-  }
-  tick();
+    if (++frame < 110) requestAnimationFrame(tick); else canvas.remove();
+  })();
 }
 
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+async function saveData() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
+  if (recordsRef) {
+    await set(recordsRef, records);
+  }
+}
+
+async function fetchStandings() {
+  try {
+    const res = await fetch(`${API_BASE}/standings?season=2026`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const entries = data?.children?.[0]?.standings?.entries || [];
+    standings = entries.map(e => {
+      const stats = {};
+      (e.stats || []).forEach(s => { stats[s.name] = s.displayValue; });
+      return {
+        name: e.team?.displayName || e.team?.name || '?',
+        abbr: e.team?.abbreviation || '',
+        rank: Number(stats.rank) || 0,
+        p: Number(stats.gamesPlayed) || 0,
+        w: Number(stats.wins) || 0,
+        d: Number(stats.ties) || 0,
+        l: Number(stats.losses) || 0,
+        gd: Number(stats.pointDifferential) || 0,
+        pts: Number(stats.points) || 0,
+        isMu: isManUnited(e.team)
+      };
+    }).sort((a,b) => a.rank - b.rank);
+    muTable = standings.find(s => s.isMu) || null;
+  } catch (e) {
+    console.warn('standings', e);
+  }
+}
+
+async function autoImportResults() {
+  if (autoImportDone) return;
+  autoImportDone = true;
+  const today = new Date();
+  today.setHours(23,59,59,999);
+  const toCheck = FIXTURES.filter(f => {
+    const d = parseFixtureDate(f.date);
+    const rec = records[f.id] || records[String(f.id)];
+    const hasResult = rec && rec.mu !== undefined;
+    return d <= today && !hasResult;
+  });
+  const dates = [...new Set(toCheck.map(f => toYmd(parseFixtureDate(f.date))))];
+  let changed = false;
+
+  for (const ymd of dates) {
+    try {
+      const res = await fetch(`${API_BASE}/scoreboard?dates=${ymd}`);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const events = data.events || [];
+      for (const ev of events) {
+        const comps = ev.competitions || [];
+        for (const c of comps) {
+          const competitors = c.competitors || [];
+          const mu = competitors.find(x => isManUnited(x.team));
+          if (!mu) continue;
+          const status = c.status?.type;
+          if (!status?.completed && status?.name !== 'STATUS_FULL_TIME') continue;
+          const oppSide = competitors.find(x => x !== mu);
+          const muScore = Number(mu.score);
+          const oppScore = Number(oppSide?.score);
+          if (Number.isNaN(muScore) || Number.isNaN(oppScore)) continue;
+          const oppName = oppSide?.team?.displayName || oppSide?.team?.name || '';
+          const fixture = FIXTURES.find(f => toYmd(parseFixtureDate(f.date)) === ymd && namesMatch(f.opp, oppName));
+          if (!fixture) continue;
+          const key = String(fixture.id);
+          const existing = records[key];
+          if (existing && existing.mu !== undefined) continue;
+          const venue = mu.homeAway === 'home' ? 'Home' : 'Away';
+          const hl = `Full time · ${oppName} ${oppScore}–${muScore} Man United (${venue}). Auto-imported.`;
+          records[key] = { mu: muScore, opp: oppScore, highlight: hl, auto: true };
+          changed = true;
+        }
+      }
+    } catch (e) {
+      console.warn('auto import', ymd, e);
+    }
+  }
+  if (changed) {
+    try { await saveData(); } catch (e) { console.warn(e); }
+  }
+}
+
+function nextUnplayed() {
+  return FIXTURES.find(f => {
+    const rec = records[f.id] || records[String(f.id)];
+    return !(rec && rec.mu !== undefined);
+  }) || null;
+}
+
+function buildupNotes(next) {
+  if (!next) return ['Season complete — review the log and plan the summer.'];
+  const d = parseFixtureDate(next.date);
+  const now = new Date();
+  now.setHours(0,0,0,0);
+  const days = Math.round((d - now) / 86400000);
+  const home = next.venue === 'H';
+  const notes = [];
+  if (days < 0) notes.push(`GW${next.gw} vs ${next.opp} is past kick-off — scores will auto-fill when the result posts.`);
+  else if (days === 0) notes.push(`Matchday. ${home ? 'Old Trafford' : 'Away day'} vs ${next.opp}. Light activation, travel ready, set-piece walk-through.`);
+  else if (days === 1) notes.push(`MD-1: taper volume. Rondo + finishing, rest legs, final set-piece walkthrough.`);
+  else if (days <= 3) notes.push(`MD-${days}: midweek intensity. Recovery from last game, then sharpness work and shape vs ${next.opp}.`);
+  else notes.push(`${days} days until ${home ? 'home' : 'away'} vs ${next.opp}. Build aerobic base early in the week; intensity rises closer to MD.`);
+  if (muTable) {
+    notes.push(`Table: ${muTable.rank}${ordinal(muTable.rank)} · ${muTable.pts} pts · GD ${muTable.gd >= 0 ? '+' : ''}${muTable.gd} after ${muTable.p} played.`);
+  }
+  notes.push(home
+    ? `Home focus: control transitions, crowd energy after the whistle, first 15 minutes intensity.`
+    : `Away focus: compact block, set-piece discipline (lesson from Hull), counter windows.`);
+  notes.push(`Training week template: Mon recovery · Tue tactical shape · Wed power/speed · Thu unit work · Fri activation.`);
+  return notes;
+}
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return s[(v - 20) % 10] || s[v] || s[0];
+}
+
+function renderBuildup() {
+  const next = nextUnplayed();
+  const notes = buildupNotes(next);
+  const tableRows = (standings.length ? standings : []).slice(0, 8).map(s => `
+    <tr class="${s.isMu ? 'mu' : ''}">
+      <td class="pos">${s.rank}</td>
+      <td>${escapeHtml(s.name)}${s.isMu ? ' ★' : ''}</td>
+      <td class="num">${s.p}</td>
+      <td class="num">${s.gd >= 0 ? '+' : ''}${s.gd}</td>
+      <td class="pts">${s.pts}</td>
+    </tr>
+  `).join('');
+
+  let extra = '';
+  if (muTable && muTable.rank > 8) {
+    extra = `
+    <tr class="mu">
+      <td class="pos">${muTable.rank}</td>
+      <td>${escapeHtml(muTable.name)} ★</td>
+      <td class="num">${muTable.p}</td>
+      <td class="num">${muTable.gd >= 0 ? '+' : ''}${muTable.gd}</td>
+      <td class="pts">${muTable.pts}</td>
+    </tr>`;
+  }
+
+  return `
+    <div class="buildup">
+      <div class="panel">
+        <h2>Premier League table</h2>
+        ${standings.length ? `
+        <table class="standings-table">
+          <thead><tr><th class="pos">#</th><th>Club</th><th class="num">P</th><th class="num">GD</th><th class="pts">Pts</th></tr></thead>
+          <tbody>${tableRows}${extra}</tbody>
+        </table>` : `<div style="color:var(--grey);font-size:12px;">Loading standings…</div>`}
+      </div>
+      <div class="panel">
+        <h2>Matchday build-up</h2>
+        ${next ? `
+          <div class="next-match-line">Next · GW${next.gw} vs ${escapeHtml(next.opp)}</div>
+          <div class="next-meta">${escapeHtml(next.date)} · ${next.venue === 'H' ? 'Home' : 'Away'} · ${next.comp}</div>
+        ` : `<div class="next-match-line">No fixtures left</div>`}
+        <ul class="buildup-notes">
+          ${notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+  `;
 }
 
 function renderTicket(f) {
   const rec = records[f.id] || records[String(f.id)];
   const played = rec && rec.mu !== undefined;
   const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
-
   if (played) {
     const r = resultFor(rec);
     return `
       <div class="ticket">
-        <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
+        <div class="stub">GW ${f.gw} · ${f.comp}</div>
         <div class="body stamp-block">
           <div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div>
           <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
-          <div class="date">${f.date} &middot; ${venueLabel}</div>
+          <div class="date">${f.date} · ${venueLabel}</div>
           <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
-          <div class="final-score">${rec.mu} &ndash; ${rec.opp}</div>
+          <div class="final-score">${rec.mu} – ${rec.opp}</div>
+          ${rec.auto ? '<div class="auto-tag">Auto score</div>' : ''}
           <div class="highlight-display ${rec.highlight ? '' : 'empty'}">${rec.highlight ? escapeHtml(rec.highlight) : 'No highlight noted.'}</div>
           <button class="edit-link" id="edit-${f.id}">Edit result</button>
         </div>
-      </div>
-    `;
+      </div>`;
   }
-
   return `
     <div class="ticket">
-      <div class="stub">GW ${f.gw} &middot; ${f.comp}</div>
+      <div class="stub">GW ${f.gw} · ${f.comp}</div>
       <div class="body">
         <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
-        <div class="date">${f.date} &middot; ${venueLabel}</div>
+        <div class="date">${f.date} · ${venueLabel}</div>
         <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
         <div class="score-form">
           <span class="mu-mono">MUFC</span>
@@ -582,8 +466,7 @@ function renderTicket(f) {
         <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, Man of the Match...">${rec && rec.highlight ? escapeHtml(rec.highlight) : ''}</textarea>
         <button class="save-btn" id="save-${f.id}">Stamp result</button>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 function render() {
@@ -596,15 +479,13 @@ function render() {
     return true;
   });
 
-  const statusClass = syncStatus === 'live' ? 'ok' : syncStatus === 'error' ? 'err' : 'warn';
-
   root.innerHTML = `
     <div class="mu-header">
       <div class="eyebrow">Traouse Presents</div>
       <h1 class="mu-display">The Red <span>Devils'</span> Matchday Log</h1>
-      <div class="season">2026/27 Premier League &middot; Champions League fixtures land after the Aug 27 draw</div>
+      <div class="season">2026/27 Premier League · scores auto-update when results post</div>
     </div>
-
+    ${loadError ? `<div class="err-banner">${escapeHtml(loadError)}</div>` : ''}
     <div class="scoreboard">
       <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
       <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
@@ -615,31 +496,24 @@ function render() {
       <div class="flip"><div class="val">${stats.gd>0?'+':''}${stats.gd}</div><div class="lab">Gl Diff</div></div>
       <div class="flip"><div class="val">${stats.pts}</div><div class="lab">Points</div></div>
     </div>
-
     <div class="streak-line">
       Current form
-      <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results logged yet</span>'}</span>
+      <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results yet</span>'}</span>
     </div>
-
+    ${renderBuildup()}
     <div class="tabs">
       <button class="tab ${filter==='all'?'active':''}" data-f="all">All 38</button>
       <button class="tab ${filter==='played'?'active':''}" data-f="played">Played (${stats.p})</button>
       <button class="tab ${filter==='upcoming'?'active':''}" data-f="upcoming">Upcoming (${38-stats.p})</button>
     </div>
-
     <div class="tickets">
       ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
-    </div>
-
-    <div class="status-msg">
-      <span class="${statusClass}">${statusDetail || (syncStatus === 'loading' ? 'Loading…' : '')}</span>
     </div>
   `;
 
   root.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', () => { filter = btn.dataset.f; render(); });
   });
-
   visible.forEach(f => {
     const saveBtn = root.querySelector(`#save-${f.id}`);
     const editBtn = root.querySelector(`#edit-${f.id}`);
@@ -650,24 +524,18 @@ function render() {
         const hlVal = root.querySelector(`#hl-${f.id}`).value;
         if (muVal === '' || oppVal === '') return;
         saveBtn.disabled = true;
-        records[String(f.id)] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal };
+        records[String(f.id)] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal, auto: false };
         try {
           await saveData();
           render();
           if (resultFor(records[String(f.id)]) === 'W') fireConfetti();
-        } catch (_) {
-          saveBtn.disabled = false;
-        }
+        } catch (_) { saveBtn.disabled = false; }
       });
     }
     if (editBtn) {
       editBtn.addEventListener('click', async () => {
         const key = String(f.id);
-        if (records[key]) {
-          delete records[key].mu;
-          delete records[key].opp;
-          if (!records[key].highlight) delete records[key];
-        }
+        delete records[key];
         await saveData();
         render();
       });
@@ -675,7 +543,36 @@ function render() {
   });
 }
 
-loadData();
+async function boot() {
+  render();
+  if (recordsRef) {
+    onValue(recordsRef, async (snap) => {
+      const val = snap.val();
+      records = val && typeof val === 'object' ? val : {};
+      const normalised = {};
+      Object.keys(records).forEach(k => { normalised[String(k)] = records[k]; });
+      records = normalised;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
+      render();
+      await fetchStandings();
+      await autoImportResults();
+      render();
+    }, (err) => {
+      loadError = err.message || 'Firebase read failed';
+      render();
+    });
+  } else {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) records = JSON.parse(raw);
+    } catch (_) {}
+    await fetchStandings();
+    await autoImportResults();
+    render();
+  }
+}
+
+boot();
 </script>
 </body>
 </html>

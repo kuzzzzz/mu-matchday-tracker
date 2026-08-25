@@ -11,21 +11,10 @@
 <div id="mu-root"></div>
 <style>
   #mu-root {
-    --paper: #EFE4C8;
-    --paper-dark: #E2D3AC;
-    --ink: #241E17;
-    --red: #C8102E;
-    --red-dark: #8C0B20;
-    --gold: #C6A15B;
-    --night: #14110D;
-    --green: #2F5233;
-    --grey: #6b6252;
-    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
-    background: var(--night);
-    color: var(--paper);
-    padding: 28px 16px 60px;
-    min-height: 100vh;
-    box-sizing: border-box;
+    --paper: #EFE4C8; --paper-dark: #E2D3AC; --ink: #241E17; --red: #C8102E; --red-dark: #8C0B20;
+    --gold: #C6A15B; --night: #14110D; --green: #2F5233; --grey: #6b6252;
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif; background: var(--night); color: var(--paper);
+    padding: 28px 16px 60px; min-height: 100vh; box-sizing: border-box;
   }
   #mu-root * { box-sizing: border-box; }
   .mu-display { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
@@ -43,32 +32,32 @@
   .streak-line { text-align: center; color: var(--paper); font-size: 13px; margin-bottom: 26px; }
   .streak-line .pips { display: inline-flex; gap: 4px; vertical-align: middle; margin-left: 8px; }
   .pip { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; }
-  .pip.W { background: var(--green); }
-  .pip.D { background: var(--grey); }
-  .pip.L { background: var(--red-dark); }
-  .buildup {
-    max-width: 1100px; margin: 0 auto 28px; display: grid;
-    grid-template-columns: 1fr; gap: 16px;
-  }
-  @media (min-width: 720px) { .buildup { grid-template-columns: 1.1fr 1fr; } }
-  .panel {
-    background: #1c1812; border: 1px solid #33291a; border-radius: 10px; padding: 16px 18px;
-  }
-  .panel h2 {
-    font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--gold); margin: 0 0 12px;
-  }
+  .pip.W { background: var(--green); } .pip.D { background: var(--grey); } .pip.L { background: var(--red-dark); }
+  .buildup { max-width: 1100px; margin: 0 auto 28px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .buildup { grid-template-columns: 1fr 1fr 1fr; } }
+  @media (min-width: 720px) and (max-width: 899px) { .buildup { grid-template-columns: 1fr 1fr; } }
+  .panel { background: #1c1812; border: 1px solid #33291a; border-radius: 10px; padding: 16px 18px; }
+  .panel h2 { font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin: 0 0 12px; }
   .standings-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .standings-table th { text-align: left; color: var(--grey); font-weight: 500; padding: 4px 6px; border-bottom: 1px solid #33291a; }
   .standings-table td { padding: 5px 6px; border-bottom: 1px solid #2a2418; }
-  .standings-table tr.mu { background: rgba(200,16,46,0.18); color: var(--paper); }
+  .standings-table tr.mu { background: rgba(200,16,46,0.18); }
   .standings-table .pos { color: var(--grey); width: 28px; }
   .standings-table .pts { font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--gold); text-align: right; }
-  .standings-table .num { font-family: 'IBM Plex Mono', monospace; text-align: right; color: var(--paper); }
+  .standings-table .num { font-family: 'IBM Plex Mono', monospace; text-align: right; }
   .next-match-line { font-family: 'Oswald', sans-serif; font-size: 18px; text-transform: uppercase; margin-bottom: 8px; }
   .next-meta { font-size: 12px; color: var(--grey); margin-bottom: 12px; }
-  .buildup-notes { font-size: 13px; line-height: 1.55; color: var(--paper); }
+  .buildup-notes { font-size: 13px; line-height: 1.55; margin: 0; padding-left: 18px; }
   .buildup-notes li { margin-bottom: 6px; }
+  .injury-list { list-style: none; margin: 0; padding: 0; font-size: 12.5px; }
+  .injury-list li { padding: 8px 0; border-bottom: 1px solid #2a2418; display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; }
+  .injury-list .player { font-weight: 600; }
+  .injury-list .reason { color: var(--grey); font-size: 11px; grid-column: 1 / -1; }
+  .badge { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid; white-space: nowrap; height: fit-content; }
+  .badge.out { color: #e88; border-color: #a44; }
+  .badge.doubt { color: #c6a15b; border-color: #8a7040; }
+  .badge.ok { color: #8c8; border-color: #4a6a4a; }
+  .src-link { font-size: 11px; color: var(--gold); display: inline-block; margin-top: 10px; }
   .tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 22px; flex-wrap: wrap; }
   .tab { background: transparent; border: 1px solid #3a3226; color: var(--grey); padding: 7px 16px; border-radius: 999px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
   .tab.active { background: var(--red); border-color: var(--red); color: #fff; }
@@ -98,6 +87,10 @@
   .highlight-display { font-size: 12.5px; color: #3a3226; background: rgba(0,0,0,0.05); border-left: 3px solid var(--gold); padding: 6px 9px; border-radius: 4px; margin-bottom: 8px; white-space: pre-wrap; }
   .highlight-display.empty { color: var(--grey); font-style: italic; }
   .auto-tag { font-size: 10px; color: var(--grey); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+  .video-wrap { margin: 8px 0 10px; border-radius: 8px; overflow: hidden; background: #000; aspect-ratio: 16/9; }
+  .video-wrap iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .vid-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .vid-links a { font-size: 11px; color: var(--red); text-decoration: underline; }
   .edit-link { font-size: 11px; color: var(--red); background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; font-family: inherit; }
   .empty-state { grid-column: 1 / -1; text-align: center; color: var(--grey); padding: 40px 0; font-size: 13px; }
   .err-banner { max-width: 640px; margin: 0 auto 16px; text-align: center; font-size: 12px; color: #c66; }
@@ -121,6 +114,22 @@ const firebaseConfig = {
 
 const API_BASE = 'https://worldcup26.ir/get/soccer/eng.1';
 const MONTHS = { Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11 };
+
+const HIGHLIGHT_IDS = {
+  1: { id: 'n72HGVMWzVE', label: 'MUFC Highlights', extended: 'ICbp7kdsVFg' }
+};
+
+const DEFAULT_INJURIES = {
+  updated: '23 Aug 2026',
+  source: 'https://www.premierinjuries.com/teams/manchester-united',
+  players: [
+    { name: 'Matthijs de Ligt', reason: 'Lower back', status: 'out', return: '06/09/2026', note: 'Back training; not involved yet' },
+    { name: 'Mason Mount', reason: 'Ankle/foot', status: 'doubt', return: '30/08/2026', note: 'Touch and go — managed carefully' },
+    { name: 'Manuel Ugarte', reason: 'Knee (surgery)', status: 'out', return: 'TBC', note: 'Post World Cup ligament surgery' },
+    { name: 'Amad Diallo', reason: 'Niggle', status: 'out', return: 'TBC', note: 'Picked up in training end of week' },
+    { name: 'Tom Heaton', reason: 'Knock', status: 'doubt', return: 'TBC', note: 'Being assessed' }
+  ]
+};
 
 const FIXTURES = [
   {id:1, gw:1, date:'Sat 22 Aug 2026', opp:'Hull City', venue:'A', comp:'PL'},
@@ -171,29 +180,27 @@ let records = {};
 let filter = 'all';
 let standings = [];
 let muTable = null;
+let injuries = DEFAULT_INJURIES;
 let loadError = null;
 let autoImportDone = false;
 let recordsRef = null;
+let injuriesRef = null;
 
 try {
   const app = initializeApp(firebaseConfig);
-  recordsRef = ref(getDatabase(app), DB_PATH);
+  const db = getDatabase(app);
+  recordsRef = ref(db, DB_PATH);
+  injuriesRef = ref(db, 'injuries');
 } catch (e) {
   loadError = e.message || 'Firebase init failed';
 }
 
 function parseFixtureDate(str) {
   const parts = str.trim().split(/\s+/);
-  const day = parseInt(parts[1], 10);
-  const mon = MONTHS[parts[2]];
-  const year = parseInt(parts[3], 10);
-  return new Date(year, mon, day);
+  return new Date(parseInt(parts[3],10), MONTHS[parts[2]], parseInt(parts[1],10));
 }
 function toYmd(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}${m}${day}`;
+  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
 }
 function normalizeName(s) {
   return (s || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]/g, '');
@@ -206,18 +213,16 @@ function isManUnited(team) {
   const n = (team?.name || team?.displayName || team?.abbreviation || '').toLowerCase();
   return n.includes('manchester united') || n === 'man united' || n === 'man utd' || n === 'mun' || n === 'man';
 }
-
 function resultFor(rec) {
   if (rec.mu > rec.opp) return 'W';
   if (rec.mu < rec.opp) return 'L';
   return 'D';
 }
 function computeStats() {
-  let p=0,w=0,d=0,l=0,gf=0,ga=0;
-  const streak = [];
+  let p=0,w=0,d=0,l=0,gf=0,ga=0; const streak = [];
   FIXTURES.forEach(f => {
     const rec = records[f.id] || records[String(f.id)];
-    if (rec && rec.mu !== undefined && rec.opp !== undefined) {
+    if (rec && rec.mu !== undefined) {
       p++; gf += Number(rec.mu); ga += Number(rec.opp);
       const r = resultFor(rec);
       if (r==='W') w++; else if (r==='D') d++; else l++;
@@ -234,34 +239,45 @@ function escapeHtml(str) {
 function fireConfetti() {
   const canvas = document.createElement('canvas');
   canvas.className = 'confetti-canvas';
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
   document.body.appendChild(canvas);
   const ctx = canvas.getContext('2d');
   const colors = ['#C8102E', '#C6A15B', '#EFE4C8', '#2F5233'];
   const pieces = Array.from({length: 80}, () => ({
     x: Math.random()*canvas.width, y: -20 - Math.random()*canvas.height*0.3,
-    vy: 2 + Math.random()*3, vx: -1.5 + Math.random()*3,
-    size: 4 + Math.random()*5, color: colors[Math.floor(Math.random()*colors.length)],
-    rot: Math.random()*360, vr: -6 + Math.random()*12
+    vy: 2+Math.random()*3, vx: -1.5+Math.random()*3, size: 4+Math.random()*5,
+    color: colors[Math.floor(Math.random()*colors.length)], rot: Math.random()*360, vr: -6+Math.random()*12
   }));
   let frame = 0;
   (function tick() {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     pieces.forEach(p => {
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot * Math.PI/180);
-      ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6); ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle=p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6); ctx.restore();
     });
     if (++frame < 110) requestAnimationFrame(tick); else canvas.remove();
   })();
 }
 
+function ytSearchUrl(f) {
+  const q = encodeURIComponent(`Manchester United vs ${f.opp} highlights ${parseFixtureDate(f.date).getFullYear()}`);
+  return `https://www.youtube.com/results?search_query=${q}`;
+}
+function ytEmbed(id) {
+  return `https://www.youtube.com/embed/${id}?rel=0`;
+}
+function ytWatch(id) {
+  return `https://www.youtube.com/watch?v=${id}`;
+}
+function highlightFor(f, rec) {
+  if (rec?.videoId) return { id: rec.videoId, extended: rec.videoExtended || null };
+  return HIGHLIGHT_IDS[f.id] || null;
+}
+
 async function saveData() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); } catch (_) {}
-  if (recordsRef) {
-    await set(recordsRef, records);
-  }
+  if (recordsRef) await set(recordsRef, records);
 }
 
 async function fetchStandings() {
@@ -275,74 +291,66 @@ async function fetchStandings() {
       (e.stats || []).forEach(s => { stats[s.name] = s.displayValue; });
       return {
         name: e.team?.displayName || e.team?.name || '?',
-        abbr: e.team?.abbreviation || '',
-        rank: Number(stats.rank) || 0,
-        p: Number(stats.gamesPlayed) || 0,
-        w: Number(stats.wins) || 0,
-        d: Number(stats.ties) || 0,
-        l: Number(stats.losses) || 0,
-        gd: Number(stats.pointDifferential) || 0,
-        pts: Number(stats.points) || 0,
+        rank: Number(stats.rank)||0, p: Number(stats.gamesPlayed)||0,
+        gd: Number(stats.pointDifferential)||0, pts: Number(stats.points)||0,
         isMu: isManUnited(e.team)
       };
     }).sort((a,b) => a.rank - b.rank);
     muTable = standings.find(s => s.isMu) || null;
-  } catch (e) {
-    console.warn('standings', e);
-  }
+  } catch (e) { console.warn(e); }
 }
 
 async function autoImportResults() {
   if (autoImportDone) return;
   autoImportDone = true;
-  const today = new Date();
-  today.setHours(23,59,59,999);
+  const today = new Date(); today.setHours(23,59,59,999);
   const toCheck = FIXTURES.filter(f => {
-    const d = parseFixtureDate(f.date);
     const rec = records[f.id] || records[String(f.id)];
-    const hasResult = rec && rec.mu !== undefined;
-    return d <= today && !hasResult;
+    return parseFixtureDate(f.date) <= today && !(rec && rec.mu !== undefined);
   });
   const dates = [...new Set(toCheck.map(f => toYmd(parseFixtureDate(f.date))))];
   let changed = false;
-
   for (const ymd of dates) {
     try {
       const res = await fetch(`${API_BASE}/scoreboard?dates=${ymd}`);
       if (!res.ok) continue;
       const data = await res.json();
-      const events = data.events || [];
-      for (const ev of events) {
-        const comps = ev.competitions || [];
-        for (const c of comps) {
+      for (const ev of (data.events || [])) {
+        for (const c of (ev.competitions || [])) {
           const competitors = c.competitors || [];
           const mu = competitors.find(x => isManUnited(x.team));
           if (!mu) continue;
           const status = c.status?.type;
           if (!status?.completed && status?.name !== 'STATUS_FULL_TIME') continue;
           const oppSide = competitors.find(x => x !== mu);
-          const muScore = Number(mu.score);
-          const oppScore = Number(oppSide?.score);
+          const muScore = Number(mu.score), oppScore = Number(oppSide?.score);
           if (Number.isNaN(muScore) || Number.isNaN(oppScore)) continue;
           const oppName = oppSide?.team?.displayName || oppSide?.team?.name || '';
           const fixture = FIXTURES.find(f => toYmd(parseFixtureDate(f.date)) === ymd && namesMatch(f.opp, oppName));
           if (!fixture) continue;
           const key = String(fixture.id);
-          const existing = records[key];
-          if (existing && existing.mu !== undefined) continue;
-          const venue = mu.homeAway === 'home' ? 'Home' : 'Away';
-          const hl = `Full time · ${oppName} ${oppScore}–${muScore} Man United (${venue}). Auto-imported.`;
-          records[key] = { mu: muScore, opp: oppScore, highlight: hl, auto: true };
+          if (records[key]?.mu !== undefined) continue;
+          const known = HIGHLIGHT_IDS[fixture.id];
+          records[key] = {
+            mu: muScore, opp: oppScore, auto: true,
+            highlight: `Full time · ${oppName} ${oppScore}–${muScore} Man United. Auto-imported.`,
+            videoId: known?.id || null,
+            videoExtended: known?.extended || null
+          };
           changed = true;
         }
       }
-    } catch (e) {
-      console.warn('auto import', ymd, e);
+    } catch (e) { console.warn(e); }
+  }
+  for (const [fid, h] of Object.entries(HIGHLIGHT_IDS)) {
+    const key = String(fid);
+    if (records[key] && !records[key].videoId) {
+      records[key].videoId = h.id;
+      records[key].videoExtended = h.extended || null;
+      changed = true;
     }
   }
-  if (changed) {
-    try { await saveData(); } catch (e) { console.warn(e); }
-  }
+  if (changed) { try { await saveData(); } catch (_) {} }
 }
 
 function nextUnplayed() {
@@ -351,81 +359,73 @@ function nextUnplayed() {
     return !(rec && rec.mu !== undefined);
   }) || null;
 }
-
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return s[(v-20)%10] || s[v] || s[0];
+}
 function buildupNotes(next) {
-  if (!next) return ['Season complete — review the log and plan the summer.'];
+  if (!next) return ['Season complete.'];
   const d = parseFixtureDate(next.date);
-  const now = new Date();
-  now.setHours(0,0,0,0);
+  const now = new Date(); now.setHours(0,0,0,0);
   const days = Math.round((d - now) / 86400000);
   const home = next.venue === 'H';
   const notes = [];
-  if (days < 0) notes.push(`GW${next.gw} vs ${next.opp} is past kick-off — scores will auto-fill when the result posts.`);
-  else if (days === 0) notes.push(`Matchday. ${home ? 'Old Trafford' : 'Away day'} vs ${next.opp}. Light activation, travel ready, set-piece walk-through.`);
-  else if (days === 1) notes.push(`MD-1: taper volume. Rondo + finishing, rest legs, final set-piece walkthrough.`);
-  else if (days <= 3) notes.push(`MD-${days}: midweek intensity. Recovery from last game, then sharpness work and shape vs ${next.opp}.`);
-  else notes.push(`${days} days until ${home ? 'home' : 'away'} vs ${next.opp}. Build aerobic base early in the week; intensity rises closer to MD.`);
-  if (muTable) {
-    notes.push(`Table: ${muTable.rank}${ordinal(muTable.rank)} · ${muTable.pts} pts · GD ${muTable.gd >= 0 ? '+' : ''}${muTable.gd} after ${muTable.p} played.`);
-  }
-  notes.push(home
-    ? `Home focus: control transitions, crowd energy after the whistle, first 15 minutes intensity.`
-    : `Away focus: compact block, set-piece discipline (lesson from Hull), counter windows.`);
-  notes.push(`Training week template: Mon recovery · Tue tactical shape · Wed power/speed · Thu unit work · Fri activation.`);
+  if (days < 0) notes.push(`GW${next.gw} vs ${next.opp} — waiting on final score import.`);
+  else if (days === 0) notes.push(`Matchday · ${home ? 'Old Trafford' : 'Away'} vs ${next.opp}.`);
+  else if (days === 1) notes.push(`MD-1: taper · rondo + finishing · set-piece walkthrough.`);
+  else if (days <= 3) notes.push(`MD-${days}: recovery then sharpness and shape vs ${next.opp}.`);
+  else notes.push(`${days} days until ${home?'home':'away'} vs ${next.opp}.`);
+  if (muTable) notes.push(`Table: ${muTable.rank}${ordinal(muTable.rank)} · ${muTable.pts} pts · GD ${muTable.gd>=0?'+':''}${muTable.gd}.`);
+  const outs = (injuries.players || []).filter(p => p.status === 'out').map(p => p.name);
+  if (outs.length) notes.push(`Out: ${outs.join(', ')}.`);
+  notes.push(home ? 'Home focus: transitions + first 15.' : 'Away focus: compact block, set-pieces.');
   return notes;
 }
-function ordinal(n) {
-  const s = ['th','st','nd','rd'], v = n % 100;
-  return s[(v - 20) % 10] || s[v] || s[0];
+
+function renderInjuries() {
+  const list = (injuries.players || []).map(p => {
+    const badge = p.status === 'out' ? 'out' : p.status === 'doubt' ? 'doubt' : 'ok';
+    const label = p.status === 'out' ? 'Out' : p.status === 'doubt' ? 'Doubt' : 'OK';
+    return `<li>
+      <span class="player">${escapeHtml(p.name)}</span>
+      <span class="badge ${badge}">${label}</span>
+      <span class="reason">${escapeHtml(p.reason)}${p.return && p.return !== 'TBC' ? ' · return ~' + escapeHtml(p.return) : ''}${p.note ? ' — ' + escapeHtml(p.note) : ''}</span>
+    </li>`;
+  }).join('');
+  return `
+    <div class="panel">
+      <h2>Squad availability</h2>
+      <ul class="injury-list">${list || '<li style="color:var(--grey)">No absentees listed</li>'}</ul>
+      <a class="src-link" href="${escapeHtml(injuries.source || 'https://www.premierinjuries.com/teams/manchester-united')}" target="_blank" rel="noopener">Source · Premier Injuries · updated ${escapeHtml(injuries.updated || '')}</a>
+    </div>`;
 }
 
 function renderBuildup() {
   const next = nextUnplayed();
   const notes = buildupNotes(next);
-  const tableRows = (standings.length ? standings : []).slice(0, 8).map(s => `
-    <tr class="${s.isMu ? 'mu' : ''}">
-      <td class="pos">${s.rank}</td>
-      <td>${escapeHtml(s.name)}${s.isMu ? ' ★' : ''}</td>
-      <td class="num">${s.p}</td>
-      <td class="num">${s.gd >= 0 ? '+' : ''}${s.gd}</td>
-      <td class="pts">${s.pts}</td>
-    </tr>
-  `).join('');
-
+  const tableRows = standings.slice(0, 8).map(s => `
+    <tr class="${s.isMu?'mu':''}"><td class="pos">${s.rank}</td><td>${escapeHtml(s.name)}${s.isMu?' ★':''}</td>
+    <td class="num">${s.p}</td><td class="num">${s.gd>=0?'+':''}${s.gd}</td><td class="pts">${s.pts}</td></tr>`).join('');
   let extra = '';
   if (muTable && muTable.rank > 8) {
-    extra = `
-    <tr class="mu">
-      <td class="pos">${muTable.rank}</td>
-      <td>${escapeHtml(muTable.name)} ★</td>
-      <td class="num">${muTable.p}</td>
-      <td class="num">${muTable.gd >= 0 ? '+' : ''}${muTable.gd}</td>
-      <td class="pts">${muTable.pts}</td>
-    </tr>`;
+    extra = `<tr class="mu"><td class="pos">${muTable.rank}</td><td>${escapeHtml(muTable.name)} ★</td>
+      <td class="num">${muTable.p}</td><td class="num">${muTable.gd>=0?'+':''}${muTable.gd}</td><td class="pts">${muTable.pts}</td></tr>`;
   }
-
   return `
     <div class="buildup">
       <div class="panel">
         <h2>Premier League table</h2>
-        ${standings.length ? `
-        <table class="standings-table">
-          <thead><tr><th class="pos">#</th><th>Club</th><th class="num">P</th><th class="num">GD</th><th class="pts">Pts</th></tr></thead>
-          <tbody>${tableRows}${extra}</tbody>
-        </table>` : `<div style="color:var(--grey);font-size:12px;">Loading standings…</div>`}
+        ${standings.length ? `<table class="standings-table"><thead><tr><th class="pos">#</th><th>Club</th><th class="num">P</th><th class="num">GD</th><th class="pts">Pts</th></tr></thead>
+        <tbody>${tableRows}${extra}</tbody></table>` : `<div style="color:var(--grey);font-size:12px">Loading standings…</div>`}
       </div>
       <div class="panel">
         <h2>Matchday build-up</h2>
-        ${next ? `
-          <div class="next-match-line">Next · GW${next.gw} vs ${escapeHtml(next.opp)}</div>
-          <div class="next-meta">${escapeHtml(next.date)} · ${next.venue === 'H' ? 'Home' : 'Away'} · ${next.comp}</div>
-        ` : `<div class="next-match-line">No fixtures left</div>`}
-        <ul class="buildup-notes">
-          ${notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}
-        </ul>
+        ${next ? `<div class="next-match-line">Next · GW${next.gw} vs ${escapeHtml(next.opp)}</div>
+          <div class="next-meta">${escapeHtml(next.date)} · ${next.venue==='H'?'Home':'Away'} · ${next.comp}</div>` : `<div class="next-match-line">No fixtures left</div>`}
+        <ul class="buildup-notes">${notes.map(n => `<li>${escapeHtml(n)}</li>`).join('')}</ul>
       </div>
-    </div>
-  `;
+      ${renderInjuries()}
+    </div>`;
 }
 
 function renderTicket(f) {
@@ -434,17 +434,31 @@ function renderTicket(f) {
   const venueLabel = f.venue === 'H' ? 'Home' : 'Away';
   if (played) {
     const r = resultFor(rec);
+    const h = highlightFor(f, rec);
+    const videoBlock = h?.id ? `
+      <div class="video-wrap">
+        <iframe src="${ytEmbed(h.id)}" title="Highlights" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+      </div>
+      <div class="vid-links">
+        <a href="${ytWatch(h.id)}" target="_blank" rel="noopener">Open on YouTube</a>
+        ${h.extended ? `<a href="${ytWatch(h.extended)}" target="_blank" rel="noopener">Extended highlights</a>` : ''}
+        <a href="${ytSearchUrl(f)}" target="_blank" rel="noopener">More on YouTube</a>
+      </div>` : `
+      <div class="vid-links">
+        <a href="${ytSearchUrl(f)}" target="_blank" rel="noopener">▶ Watch highlights on YouTube</a>
+      </div>`;
     return `
       <div class="ticket">
         <div class="stub">GW ${f.gw} · ${f.comp}</div>
         <div class="body stamp-block">
           <div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div>
-          <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
+          <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp==='PL'?'Prem':f.comp}</span></div>
           <div class="date">${f.date} · ${venueLabel}</div>
           <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
           <div class="final-score">${rec.mu} – ${rec.opp}</div>
           ${rec.auto ? '<div class="auto-tag">Auto score</div>' : ''}
-          <div class="highlight-display ${rec.highlight ? '' : 'empty'}">${rec.highlight ? escapeHtml(rec.highlight) : 'No highlight noted.'}</div>
+          <div class="highlight-display ${rec.highlight?'':'empty'}">${rec.highlight?escapeHtml(rec.highlight):'No highlight noted.'}</div>
+          ${videoBlock}
           <button class="edit-link" id="edit-${f.id}">Edit result</button>
         </div>
       </div>`;
@@ -453,7 +467,7 @@ function renderTicket(f) {
     <div class="ticket">
       <div class="stub">GW ${f.gw} · ${f.comp}</div>
       <div class="body">
-        <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp === 'PL' ? 'Prem' : f.comp}</span></div>
+        <div class="row1"><span class="gw">Matchday ${f.gw}</span><span class="comp">${f.comp==='PL'?'Prem':f.comp}</span></div>
         <div class="date">${f.date} · ${venueLabel}</div>
         <div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>
         <div class="score-form">
@@ -463,7 +477,7 @@ function renderTicket(f) {
           <input type="number" min="0" id="opp-${f.id}" placeholder="-" />
           <span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span>
         </div>
-        <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, Man of the Match...">${rec && rec.highlight ? escapeHtml(rec.highlight) : ''}</textarea>
+        <textarea class="highlight-input" id="hl-${f.id}" placeholder="Highlights, scorers, MotM...">${rec&&rec.highlight?escapeHtml(rec.highlight):''}</textarea>
         <button class="save-btn" id="save-${f.id}">Stamp result</button>
       </div>
     </div>`;
@@ -478,12 +492,11 @@ function render() {
     if (filter === 'upcoming') return !played;
     return true;
   });
-
   root.innerHTML = `
     <div class="mu-header">
       <div class="eyebrow">Traouse Presents</div>
       <h1 class="mu-display">The Red <span>Devils'</span> Matchday Log</h1>
-      <div class="season">2026/27 Premier League · scores auto-update when results post</div>
+      <div class="season">2026/27 Premier League · auto scores · highlights · squad news</div>
     </div>
     ${loadError ? `<div class="err-banner">${escapeHtml(loadError)}</div>` : ''}
     <div class="scoreboard">
@@ -496,9 +509,8 @@ function render() {
       <div class="flip"><div class="val">${stats.gd>0?'+':''}${stats.gd}</div><div class="lab">Gl Diff</div></div>
       <div class="flip"><div class="val">${stats.pts}</div><div class="lab">Points</div></div>
     </div>
-    <div class="streak-line">
-      Current form
-      <span class="pips">${stats.streak.length ? stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join('') : '<span style="color:var(--grey);font-size:11px;">no results yet</span>'}</span>
+    <div class="streak-line">Current form
+      <span class="pips">${stats.streak.length?stats.streak.map(r=>`<span class="pip ${r}">${r}</span>`).join(''):'<span style="color:var(--grey);font-size:11px">no results yet</span>'}</span>
     </div>
     ${renderBuildup()}
     <div class="tabs">
@@ -506,14 +518,9 @@ function render() {
       <button class="tab ${filter==='played'?'active':''}" data-f="played">Played (${stats.p})</button>
       <button class="tab ${filter==='upcoming'?'active':''}" data-f="upcoming">Upcoming (${38-stats.p})</button>
     </div>
-    <div class="tickets">
-      ${visible.length ? visible.map(renderTicket).join('') : '<div class="empty-state">Nothing here yet.</div>'}
-    </div>
+    <div class="tickets">${visible.length?visible.map(renderTicket).join(''):'<div class="empty-state">Nothing here yet.</div>'}</div>
   `;
-
-  root.querySelectorAll('.tab').forEach(btn => {
-    btn.addEventListener('click', () => { filter = btn.dataset.f; render(); });
-  });
+  root.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => { filter = btn.dataset.f; render(); }));
   visible.forEach(f => {
     const saveBtn = root.querySelector(`#save-${f.id}`);
     const editBtn = root.querySelector(`#edit-${f.id}`);
@@ -524,23 +531,29 @@ function render() {
         const hlVal = root.querySelector(`#hl-${f.id}`).value;
         if (muVal === '' || oppVal === '') return;
         saveBtn.disabled = true;
-        records[String(f.id)] = { mu: Number(muVal), opp: Number(oppVal), highlight: hlVal, auto: false };
+        const known = HIGHLIGHT_IDS[f.id];
+        records[String(f.id)] = {
+          mu: Number(muVal), opp: Number(oppVal), highlight: hlVal, auto: false,
+          videoId: known?.id || null, videoExtended: known?.extended || null
+        };
         try {
-          await saveData();
-          render();
+          await saveData(); render();
           if (resultFor(records[String(f.id)]) === 'W') fireConfetti();
         } catch (_) { saveBtn.disabled = false; }
       });
     }
     if (editBtn) {
       editBtn.addEventListener('click', async () => {
-        const key = String(f.id);
-        delete records[key];
-        await saveData();
-        render();
+        delete records[String(f.id)];
+        await saveData(); render();
       });
     }
   });
+}
+
+async function seedInjuries() {
+  if (!injuriesRef) return;
+  try { await set(injuriesRef, DEFAULT_INJURIES); } catch (_) {}
 }
 
 async function boot() {
@@ -557,10 +570,7 @@ async function boot() {
       await fetchStandings();
       await autoImportResults();
       render();
-    }, (err) => {
-      loadError = err.message || 'Firebase read failed';
-      render();
-    });
+    }, (err) => { loadError = err.message || 'Firebase read failed'; render(); });
   } else {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -569,6 +579,14 @@ async function boot() {
     await fetchStandings();
     await autoImportResults();
     render();
+  }
+  if (injuriesRef) {
+    onValue(injuriesRef, (snap) => {
+      const val = snap.val();
+      if (val && val.players) injuries = val;
+      else seedInjuries();
+      render();
+    });
   }
 }
 

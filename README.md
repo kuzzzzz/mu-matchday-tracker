@@ -1,55 +1,22 @@
 # mu-matchday-tracker
 
-Manchester United 2026/27 matchday companion — scores, highlights, news, and **your personal prediction archive**.
+Manchester United **2026/27** season companion — scores, highlights, news, predictions, and personal archive.
 
-Not another football site. A season-long digital companion you own.
+## Live view
 
-## Live features
+- **Focus** (default): last few results + next few fixtures only — clean first screen
+- **Played / Next up / All**: full list when you want it
+- **Premier League + Champions League** fixtures in one timeline
+- Auto scores, YouTube highlight banners, matchday news, fan predictions
 
-- Auto score import + curated YouTube highlights (thumbnail banners)
-- Matchday build-up: standings, injuries, dynamic news
-- Fans area: predictions on upcoming games, comments after kick-off
-- **My Season** panel: your prediction history, hit rate, exact scores, form pips, points
-- Your call shown on every ticket (exact / correct result / miss)
-- Season framed as the primary object (2026/27 live archive; future seasons shell ready)
+## Setup (Firebase — optional live sync)
 
-## Live sync (all browsers)
+1. Create a Firebase project → Realtime Database (europe-west1)
+2. Add a web app and paste `firebaseConfig` into the loaded app if you self-host a full copy
+3. Rules: allow read/write for `/records`, `/injuries`, `/discuss` in test mode while developing
 
-Results and fan discussion sync via **Firebase Realtime Database**.
-
-Stamp a result or lock a prediction on your phone → it appears everywhere.
-
-### One-time setup (~2 minutes)
-
-1. Open Firebase Console → Create a project.
-2. Build → Realtime Database → Create Database (test mode or rules below).
-3. Project settings → Your apps → Web app → copy `firebaseConfig`.
-4. Paste into the app (search for `firebaseConfig` inside the loaded app).
-5. Commit & push.
-
-Suggested rules:
-
-```
-{
-  "rules": {
-    ".read": true,
-    ".write": true
-  }
-}
-```
-
-(Tighten later for production.)
+The public GitHub Pages site loads a compressed full app (focus + UCL) via chunked gzip.
 
 ## Run locally
 
-Open `index.html` in a browser, or:
-
-```
-npx serve .
-```
-
-## Design filter
-
-Every feature is filtered by: **memory · utility · identity · ownership**.
-
-Premium archives, personalised season books, and collectibles are the long-term direction for fans who care.
+Open `index.html` or `npx serve .`

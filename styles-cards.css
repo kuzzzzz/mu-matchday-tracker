@@ -1,0 +1,62 @@
+.tickets{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;max-width:1100px;margin:0 auto}
+.ticket{position:relative;background:var(--paper);color:var(--ink);border-radius:10px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.35);display:flex}
+.ticket .stub{width:34px;background:var(--paper-dark);display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.2em;color:var(--grey);text-transform:uppercase;border-right:2px dashed #b8a97e;flex-shrink:0}
+.ticket .body{padding:14px 14px 12px;flex:1;min-width:0}
+.ticket .row1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+.ticket .gw{font-size:11px;color:var(--grey);letter-spacing:.1em}
+.ticket .comp{font-size:10px;color:var(--red);font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.ticket .date{font-size:11px;color:var(--grey);margin-bottom:8px}
+.fixture-line{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;text-transform:uppercase;margin-bottom:10px;line-height:1.25}
+.fixture-line .venue-tag{font-size:10px;background:var(--ink);color:var(--paper);padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:middle}
+.score-form{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.score-form input[type=number]{width:46px;padding:6px 4px;text-align:center;border:1px solid #b8a97e;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:15px;background:#fffdf7}
+.score-form .vs{font-size:11px;color:var(--grey)}
+.highlight-input{width:100%;resize:vertical;min-height:42px;border:1px solid #b8a97e;border-radius:5px;padding:6px 8px;font-family:inherit;font-size:12px;background:#fffdf7;margin-bottom:8px}
+.save-btn{background:var(--ink);color:var(--paper);border:none;padding:7px 14px;border-radius:5px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.save-btn:hover{background:var(--red)}
+.save-btn:disabled{opacity:.5;cursor:wait}
+.stamp-block{position:relative}
+.final-score{font-family:'IBM Plex Mono',monospace;font-size:30px;font-weight:700;margin:6px 0 8px}
+.result-stamp{position:absolute;top:-6px;right:-6px;width:54px;height:54px;border-radius:50%;border:3px solid;display:flex;align-items:center;justify-content:center;font-family:'Oswald',sans-serif;font-weight:700;font-size:20px;transform:rotate(12deg);opacity:.9}
+.result-stamp.W{color:var(--green);border-color:var(--green)}
+.result-stamp.D{color:var(--grey);border-color:var(--grey)}
+.result-stamp.L{color:var(--red-dark);border-color:var(--red-dark)}
+.highlight-display{font-size:12.5px;line-height:1.45;margin-bottom:8px}
+.highlight-display.empty{color:var(--grey);font-style:italic}
+.auto-tag{font-size:10px;color:var(--grey);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.card-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px}
+.edit-link{background:transparent;border:1px solid #b8a97e;color:var(--ink);font-size:11px;padding:6px 10px;border-radius:4px;cursor:pointer}
+.fan-btn{background:var(--ink);color:var(--paper);border:none;border-radius:20px;padding:5px 10px;cursor:pointer;font-size:13px;position:relative}
+.fan-btn .cnt{position:absolute;top:-6px;right:-6px;background:var(--gold);color:#14110D;font-size:9px;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.vid-banner{display:block;position:relative;border-radius:8px;overflow:hidden;margin:10px 0;text-decoration:none;border:1px solid #b8a97e}
+.vid-banner img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover;background:#0d0b09}
+.vid-banner .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35);color:#fff;font-size:13px;gap:8px}
+.vid-banner .play .circle,.vid-banner .play div{width:48px;height:48px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:18px}
+.vid-links{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;margin-top:6px}
+.vid-links a{color:var(--red-dark);font-weight:600}
+.empty-state{grid-column:1/-1;text-align:center;color:var(--grey);padding:40px 0;font-size:13px}
+.err-banner{max-width:640px;margin:0 auto 16px;text-align:center;font-size:12px;color:#c66}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--paper);color:var(--ink);border-radius:12px;width:min(440px,100%);max-height:min(86vh,640px);display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,.5)}
+.modal-head{padding:14px 16px 10px;border-bottom:1px solid #e0d4b0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.modal-head h3{font-family:'Oswald',sans-serif;font-size:16px;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.modal-head .sub{font-size:12px;color:var(--grey);margin-top:3px}
+.modal-close{background:none;border:none;font-size:22px;line-height:1;cursor:pointer;color:var(--ink);padding:0 4px}
+.modal-body{padding:12px 16px;overflow-y:auto;flex:1}
+.modal-body .comment{font-size:13px;padding:8px 0;border-bottom:1px solid #e0d4b0}
+.modal-body .comment .who{font-weight:600;color:var(--red-dark);margin-right:6px}
+.modal-body .comment .when{font-size:10px;color:var(--grey)}
+.modal-body .pred-score{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--red)}
+.modal-body .empty{font-size:12px;color:var(--grey);font-style:italic;padding:8px 0}
+.modal-foot{padding:12px 16px 14px;border-top:1px solid #e0d4b0}
+.modal-foot form{display:flex;flex-direction:column;gap:8px}
+.modal-foot input,.modal-foot textarea{border:1px solid #b8a97e;border-radius:5px;padding:7px 9px;font-family:inherit;font-size:13px;background:#fffdf7;color:var(--ink)}
+.modal-foot textarea{min-height:56px;resize:vertical}
+.pred-row{display:flex;align-items:center;gap:8px}
+.pred-row input[type=number]{width:52px;text-align:center;font-family:'IBM Plex Mono',monospace}
+.modal-foot button[type=submit]{align-self:flex-start;background:var(--ink);color:var(--paper);border:none;padding:8px 14px;border-radius:5px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+.modal-foot button[type=submit]:hover{background:var(--red)}
+canvas.confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999}
+
+/* Focus home view */
+.focus-label{font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:18px 0 10px;opacity:.9}

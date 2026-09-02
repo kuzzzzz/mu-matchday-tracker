@@ -6,23 +6,31 @@
 <title>The Red Devils' Matchday Log</title>
 </head>
 <body style="margin:0;background:#14110D;color:#EFE4C8;font-family:system-ui,sans-serif">
-<div id="boot" style="padding:40px 16px;text-align:center">Loading season companion…</div>
+<div id="boot" style="padding:40px 16px;text-align:center">Loading matchday log…</div>
 <script type="module">
-const N = 3;
-const parts = [];
-for (let i = 0; i < N; i++) {
-  const r = await fetch('./p' + i + '.txt', { cache: 'no-store' });
-  if (!r.ok) throw new Error('missing chunk p' + i);
-  parts.push(await r.text());
+const REF = '77f6aaa38ae8e1f303dd67b8845323e0e00479e8';
+const urls = [
+  `https://cdn.jsdelivr.net/gh/kuzzzzz/mu-matchday-tracker@${REF}/index.html`,
+  `https://raw.githack.com/kuzzzzz/mu-matchday-tracker/${REF}/index.html`,
+  `https://raw.githubusercontent.com/kuzzzzz/mu-matchday-tracker/${REF}/index.html`
+];
+let html = null;
+for (const u of urls) {
+  try {
+    const r = await fetch(u, { cache: 'no-store' });
+    if (!r.ok) continue;
+    html = await r.text();
+    if (html.includes('mu-root') && html.includes('boot()')) break;
+    html = null;
+  } catch (_) {}
 }
-const bin = atob(parts.join(''));
-const bytes = new Uint8Array(bin.length);
-for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-const html = await new Response(stream).text();
-document.open();
-document.write(html);
-document.close();
+if (!html) {
+  document.getElementById('boot').innerHTML = 'Could not load app. See <a style="color:#C6A15B" href="https://github.com/kuzzzzz/mu-matchday-tracker">repo</a>.';
+} else {
+  document.open();
+  document.write(html);
+  document.close();
+}
 </script>
 </body>
 </html>

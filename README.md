@@ -1,25 +1,35 @@
 # mu-matchday-tracker
 
-Manchester United 2026/27 matchday tracker — scores and highlights.
+Manchester United 2026/27 matchday companion — scores, highlights, news, and **your personal prediction archive**.
+
+Not another football site. A season-long digital companion you own.
+
+## Live features
+
+- Auto score import + curated YouTube highlights (thumbnail banners)
+- Matchday build-up: standings, injuries, dynamic news
+- Fans area: predictions on upcoming games, comments after kick-off
+- **My Season** panel: your prediction history, hit rate, exact scores, form pips, points
+- Your call shown on every ticket (exact / correct result / miss)
+- Season framed as the primary object (2026/27 live archive; future seasons shell ready)
 
 ## Live sync (all browsers)
 
-Results sync automatically via **Firebase Realtime Database**. Stamp a result on your phone → it appears on your laptop immediately.
+Results and fan discussion sync via **Firebase Realtime Database**.
+
+Stamp a result or lock a prediction on your phone → it appears everywhere.
 
 ### One-time setup (~2 minutes)
 
-1. Open [Firebase Console](https://console.firebase.google.com) → **Create a project** (name it e.g. `mu-matchday`).
-2. Left menu → **Build** → **Realtime Database** → **Create Database**.
-   - Pick a region close to you.
-   - Start in **test mode** (or set the rules below).
-3. Gear icon → **Project settings** → **Your apps** → add a **Web** app.
-4. Copy the `firebaseConfig` object.
-5. Open `index.html` in this repo, find the config block near the top of the script, and paste your values over the placeholders.
-6. Commit & push.
+1. Open Firebase Console → Create a project.
+2. Build → Realtime Database → Create Database (test mode or rules below).
+3. Project settings → Your apps → Web app → copy `firebaseConfig`.
+4. Paste into the app (search for `firebaseConfig` inside the loaded app).
+5. Commit & push.
 
-**Database rules** (Realtime Database → Rules) — fine for a personal tracker:
+Suggested rules:
 
-```json
+```
 {
   "rules": {
     ".read": true,
@@ -28,16 +38,18 @@ Results sync automatically via **Firebase Realtime Database**. Stamp a result on
 }
 ```
 
-> Anyone with the site URL can read/write. For a private log later, switch to Auth + tighter rules.
-
-### Without Firebase
-
-The app still works: it falls back to `data.json` in the repo + `localStorage` on each device. Tell Grok to log a result if you want the shared file updated.
+(Tighten later for production.)
 
 ## Run locally
 
-Open `index.html` in a browser, or serve the folder:
+Open `index.html` in a browser, or:
 
-```bash
+```
 npx serve .
 ```
+
+## Design filter
+
+Every feature is filtered by: **memory · utility · identity · ownership**.
+
+Premium archives, personalised season books, and collectibles are the long-term direction for fans who care.

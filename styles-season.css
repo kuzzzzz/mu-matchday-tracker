@@ -1,0 +1,44 @@
+/* Season identity */
+.season-bar{max-width:1100px;margin:0 auto 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;background:#1c1812;border:1px solid #33291a;border-radius:8px}
+.season-current{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:8px}
+.season-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px rgba(47,82,51,.8)}
+.season-future{background:transparent;border:1px solid #3a3226;color:var(--grey);font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;cursor:pointer;font-family:inherit}
+.season-future:hover{border-color:var(--gold);color:var(--gold)}
+
+/* My Season personal card */
+.my-season{max-width:1100px;margin:0 auto 22px;background:#1c1812;border:1px solid #33291a;border-radius:10px;padding:16px 18px}
+.my-season.empty-nick{opacity:.92}
+.my-season-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.my-season-head h2{font-family:'Oswald',sans-serif;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0}
+.my-nick{font-size:13px;color:var(--paper);font-weight:600}
+.my-season-hint{font-size:13px;color:var(--grey);margin:0;line-height:1.45}
+.my-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+@media(max-width:480px){.my-stats{grid-template-columns:repeat(2,1fr)}}
+.my-stat{background:#14110D;border:1px solid #2a2418;border-radius:6px;padding:10px 6px;text-align:center}
+.my-stat .val{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:var(--gold)}
+.my-stat .lab{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-top:2px}
+.my-form-line{font-size:13px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pred-pips{display:inline-flex;gap:4px}
+.pred-pip{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.pred-pip.exact{background:var(--green)}
+.pred-pip.result{background:#4a6a3a}
+.pred-pip.miss{background:var(--red-dark)}
+.my-form-line .muted{color:var(--grey);font-size:11px}
+.my-recent-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);margin-bottom:8px}
+.my-calls{list-style:none;margin:0;padding:0}
+.my-calls li{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 0;border-bottom:1px solid #2a2418;font-size:13px}
+.my-calls .call-fix{color:var(--paper);min-width:120px}
+.my-calls .call-pred{font-family:'IBM Plex Mono',monospace;font-weight:700;color:var(--gold)}
+.my-calls .call-actual{font-family:'IBM Plex Mono',monospace;color:var(--grey);font-size:12px}
+.my-calls .call-badge{font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid}
+.my-calls .call-badge.exact{color:#9dcf9a;border-color:var(--green)}
+.my-calls .call-badge.result{color:#b8c9a8;border-color:#4a6a3a}
+.my-calls .call-badge.miss{color:#e88;border-color:var(--red-dark)}
+.my-calls .call-badge.pending{color:var(--gold);border-color:#8a7040}
+
+/* Your prediction outcome on a ticket */
+.ticket-pred{font-size:11px;letter-spacing:.04em;margin:6px 0 8px;padding:4px 8px;border-radius:4px;display:inline-block;border:1px solid}
+.ticket-pred.exact{background:rgba(47,82,51,.12);border-color:var(--green);color:var(--green);font-weight:600}
+.ticket-pred.result{background:rgba(74,106,58,.1);border-color:#4a6a3a;color:#2F5233}
+.ticket-pred.miss{background:rgba(140,11,32,.08);border-color:#c88;color:var(--red-dark)}
+.ticket-pred.pending{background:rgba(198,161,91,.12);border-color:#c6a15b;color:#6b5530}

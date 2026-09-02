@@ -4,7 +4,7 @@
 import { onValue } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import { STORAGE_KEY } from './constants.js';
 import { S } from './state.js';
-import { nextUnplayed } from './ui-panels.js';
+import { nextUnplayed } from './ui-buildup.js';
 import { render } from './ui.js';
 import { fetchStandings, autoImportResults, fetchNews, seedInjuries } from './data.js';
 

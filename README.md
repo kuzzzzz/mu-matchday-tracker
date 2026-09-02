@@ -1,28 +1,25 @@
 # mu-matchday-tracker
 
-Manchester United **2026/27** season companion.
+Manchester United **2026/27** season companion — scores, highlights, news, predictions.
 
-## Current live app
+## Live
 
-GitHub Pages loads the last stable full single-file app (commit `77f6aaa`) via a thin loader.
+- **Focus** (default): last 3 results + next 4 fixtures
+- Tabs: Focus · Played · Next up · All
+- Premier League + Champions League fixtures
+- Auto scores, highlight banners, matchday news, fan predictions
 
-## Target structure (in progress)
+Loader decompresses the full app from `p0.txt`–`p2.txt` (gzip).
+
+## Structure
 
 ```
-index.html          # shell only
-styles.css          # all styles
-js/constants.js     # fixtures (PL + UCL), Firebase config, curated data  ✓ landed
-js/app.js           # state · domain · data · UI · boot  (landing next)
+index.html       # thin gzip loader
+p0.txt…p2.txt    # compressed full app (Focus + UCL)
+js/constants.js  # fixtures + config (source)
+styles.css       # styles
 ```
 
-No bundler. ES modules.
+## Run
 
-## Planned UX
-
-- **Focus** home: last 3 results + next 4 fixtures only
-- Tabs: Focus | Played | Next up | All
-- Champions League league-phase fixtures on the same timeline
-
-## Run locally
-
-Open `index.html` or `npx serve .`
+Open `index.html` on GitHub Pages or `npx serve .`

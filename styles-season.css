@@ -42,3 +42,37 @@
 .ticket-pred.result{background:rgba(74,106,58,.1);border-color:#4a6a3a;color:#2F5233}
 .ticket-pred.miss{background:rgba(140,11,32,.08);border-color:#c88;color:var(--red-dark)}
 .ticket-pred.pending{background:rgba(198,161,91,.12);border-color:#c6a15b;color:#6b5530}
+
+/* Post-match reckoning on ticket */
+.reckoning{margin:10px 0 12px;padding:10px 12px;border-radius:8px;border:1px solid #c8b98a;background:rgba(36,30,23,.04)}
+.reckoning.exact{border-color:var(--green);background:rgba(47,82,51,.1)}
+.reckoning.result{border-color:#6a8a5a;background:rgba(74,106,58,.08)}
+.reckoning.miss{border-color:#c88;background:rgba(140,11,32,.06)}
+.reckoning-kicker{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--grey);margin-bottom:8px}
+.reckoning-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.reckoning-side{min-width:64px}
+.reckoning-lab{font-size:10px;color:var(--grey);letter-spacing:.06em;text-transform:uppercase}
+.reckoning-score{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:var(--ink);line-height:1.1}
+.reckoning-score.actual{color:var(--red-dark)}
+.reckoning-vs{font-size:11px;color:var(--grey);text-transform:uppercase}
+.reckoning-outcome{margin-left:auto;text-align:right}
+.reckoning-badge{display:block;font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.reckoning.exact .reckoning-badge{color:var(--green)}
+.reckoning.result .reckoning-badge{color:#2F5233}
+.reckoning.miss .reckoning-badge{color:var(--red-dark)}
+.reckoning-pts{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--grey)}
+.reckoning-blurb{margin:8px 0 0;font-size:12px;line-height:1.4;color:var(--ink);opacity:.85}
+
+/* Latest strip on My Season */
+.latest-reckoning{margin:0 0 14px;padding:10px 12px;border-radius:8px;border:1px solid #33291a;background:#14110D}
+.latest-reckoning.exact{border-color:var(--green)}
+.latest-reckoning.result{border-color:#4a6a3a}
+.latest-reckoning.miss{border-color:var(--red-dark)}
+.latest-kicker{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--grey);margin-bottom:6px}
+.latest-body{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px}
+.latest-fix{color:var(--paper)}
+.latest-scores{font-family:'IBM Plex Mono',monospace;color:var(--gold)}
+.latest-badge{margin-left:auto;font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid}
+.latest-reckoning.exact .latest-badge{color:#9dcf9a;border-color:var(--green)}
+.latest-reckoning.result .latest-badge{color:#b8c9a8;border-color:#4a6a3a}
+.latest-reckoning.miss .latest-badge{color:#e88;border-color:var(--red-dark)}

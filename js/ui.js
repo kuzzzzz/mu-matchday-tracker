@@ -4,7 +4,7 @@
 import { FIXTURES, HIGHLIGHT_IDS, NICK_KEY } from './constants.js';
 import { ref, push } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import { S, root } from './state.js';
-import { escapeHtml, computeStats, fireConfetti, resultFor, isMatchFinished, computeMySeason } from './domain.js';
+import { escapeHtml, computeStats, fireConfetti, resultFor, isMatchFinished, computeMySeason, myPredFor, predOutcome } from './domain.js';
 import { postPrediction, saveData, searchHighlights } from './data.js';
 import { renderBuildup } from './ui-buildup.js';
 import { renderDialog } from './ui-fans.js';
@@ -26,6 +26,15 @@ function renderMySeason(){
     </div>`;
   }
   const my=computeMySeason(nick);
+  const latest=my.recent.find(c=>c.outcome==='exact'||c.outcome==='result'||c.outcome==='miss');
+  const latestHtml=latest?`<div class="latest-reckoning ${latest.outcome}">
+      <div class="latest-kicker">Latest reckoning</div>
+      <div class="latest-body">
+        <span class="latest-fix">${latest.label} · ${latest.opp}</span>
+        <span class="latest-scores">You ${latest.predMu}–${latest.predOpp}${latest.actual?` · Final ${latest.actual}`:''}</span>
+        <span class="latest-badge">${latest.outcome==='exact'?'Exact +3':latest.outcome==='result'?'Result +1':'Miss'}</span>
+      </div>
+    </div>`:'';
   const formPips=my.form.length
     ?my.form.map(x=>{
       const cls=x==='E'?'exact':x==='R'?'result':'miss';
@@ -45,6 +54,7 @@ function renderMySeason(){
       <h2>My Season</h2>
       <span class="my-nick">${escapeHtml(my.nick)}</span>
     </div>
+    ${latestHtml}
     <div class="my-stats">
       <div class="my-stat"><div class="val">${my.calls}</div><div class="lab">Calls</div></div>
       <div class="my-stat"><div class="val">${my.settled?my.hitRate+'%':'—'}</div><div class="lab">Hit rate</div></div>
@@ -136,8 +146,12 @@ ${renderDialog()}`;
             if(found){S.records[String(f.id)].videoId=found.id;S.records[String(f.id)].videoExtended=found.extended}
           }
           await saveData();
+          const stamped=S.records[String(f.id)];
+          const nick=localStorage.getItem(NICK_KEY)||'';
+          const pred=myPredFor(f.id,nick);
+          const out=predOutcome(pred,stamped);
           render();
-          if(resultFor(S.records[String(f.id)])==='W')fireConfetti();
+          if(out==='exact'||resultFor(stamped)==='W')fireConfetti();
         }catch(_){saveBtn.disabled=false}
       });
     }

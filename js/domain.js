@@ -46,7 +46,7 @@ export function computeMySeason(nick){
   const empty={nick:nick||'',calls:0,settled:0,exact:0,resultHits:0,pts:0,hitRate:0,exactRate:0,form:[],recent:[]};
   if(!nick)return empty;
   const recent=[];
-  let calls=0,settled=0,exact=0,resultHits:0,pts=0;
+  let calls=0,settled=0,exact=0,resultHits=0,pts=0;
   const form=[];
   FIXTURES.forEach(f=>{
     const pred=myPredFor(f.id,nick);

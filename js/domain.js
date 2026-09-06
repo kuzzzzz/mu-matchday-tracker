@@ -6,6 +6,8 @@ import { S } from './state.js';
 
 export function parseFixtureDate(str){const p=str.trim().split(/\s+/);return new Date(+p[3],MONTHS[p[2]],+p[1])}
 export function isMatchFinished(f){const d=parseFixtureDate(f.date);d.setHours(23,59,59,999);return d<=new Date()}
+/** True from start of fixture calendar day (local) — used so auto-import can pull FT scores same day */
+export function isOnOrAfterMatchDay(f){const d=parseFixtureDate(f.date);d.setHours(0,0,0,0);const now=new Date();now.setHours(0,0,0,0);return d<=now}
 
 export function toYmd(d){return`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`}
 export function normalizeName(s){return(s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]/g,'')}
@@ -44,7 +46,7 @@ export function computeMySeason(nick){
   const empty={nick:nick||'',calls:0,settled:0,exact:0,resultHits:0,pts:0,hitRate:0,exactRate:0,form:[],recent:[]};
   if(!nick)return empty;
   const recent=[];
-  let calls=0,settled=0,exact=0,resultHits=0,pts=0;
+  let calls=0,settled=0,exact=0,resultHits:0,pts=0;
   const form=[];
   FIXTURES.forEach(f=>{
     const pred=myPredFor(f.id,nick);

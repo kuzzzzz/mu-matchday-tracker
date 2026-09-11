@@ -1,7 +1,7 @@
 /**
  * ui.js — main render (Focus home view + season identity)
  */
-import { FIXTURES, HIGHLIGHT_IDS, NICK_KEY } from './constants.js';
+import { FIXTURES, HIGHLIGHT_IDS, NICK_KEY, FEATURED_ID } from './constants.js';
 import { ref, push } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import { S, root } from './state.js';
 import { escapeHtml, computeStats, fireConfetti, resultFor, isMatchFinished, computeMySeason, myPredFor, predOutcome } from './domain.js';
@@ -9,6 +9,49 @@ import { postPrediction, saveData, searchHighlights } from './data.js';
 import { renderBuildup } from './ui-buildup.js';
 import { renderDialog } from './ui-fans.js';
 import { renderTicket } from './ui-tickets.js';
+import { shareSeasonCard } from './ui-share.js';
+
+function renderSpotlight(){
+  const f=FIXTURES.find(x=>x.id===FEATURED_ID);
+  if(!f)return'';
+  const rec=S.records[f.id]||S.records[String(f.id)];
+  const played=!!(rec&&rec.mu!==undefined);
+  const nick=localStorage.getItem(NICK_KEY)||'';
+  const pred=nick?myPredFor(f.id,nick):null;
+  const venue=f.venue==='H'?'Old Trafford · Home':'Away';
+  const label=f.comp==='UCL'?`UCL MD${f.md}`:`GW${f.gw}`;
+
+  if(played){
+    const out=pred?predOutcome(pred,rec):null;
+    const badge=out==='exact'?'Exact +3':out==='result'?'Result +1':out==='miss'?'Miss':'Settled';
+    const outCls=out||'settled';
+    return`<div class="spotlight settled ${outCls}">
+      <div class="spot-kicker">Matchday · settled</div>
+      <div class="spot-title">${escapeHtml(f.opp)} · ${rec.mu}–${rec.opp}</div>
+      <div class="spot-meta">${label} · ${escapeHtml(f.date)} · ${venue}</div>
+      ${pred?`<div class="spot-call">Your call ${pred.mu}–${pred.opp} · <strong>${badge}</strong></div>`:`<div class="spot-call">No call locked for this one</div>`}
+      <div class="spot-actions">
+        <button type="button" class="spot-btn ghost" data-open-fan="${f.id}">Open chat</button>
+      </div>
+    </div>`;
+  }
+
+  const locked=!!pred;
+  return`<div class="spotlight open">
+    <div class="spot-kicker">Matchday campaign</div>
+    <div class="spot-title">Before ${escapeHtml(f.opp)} — lock your score</div>
+    <div class="spot-meta">${label} · ${escapeHtml(f.date)} · ${venue}</div>
+    <p class="spot-blurb">One fixture. One deadline. After the whistle we settle reckoning — closest call owns the bragging rights.</p>
+    ${locked
+      ?`<div class="spot-call locked">Locked · You ${pred.mu}–${pred.opp} · waiting for kickoff</div>
+        <div class="spot-actions">
+          <button type="button" class="spot-btn" data-open-fan="${f.id}">View / change call</button>
+        </div>`
+      :`<div class="spot-actions">
+          <button type="button" class="spot-btn" data-open-fan="${f.id}">Lock your score</button>
+        </div>`}
+  </div>`;
+}
 
 function renderSeasonBar(){
   return`<div class="season-bar">
@@ -53,6 +96,7 @@ function renderMySeason(){
     <div class="my-season-head">
       <h2>My Season</h2>
       <span class="my-nick">${escapeHtml(my.nick)}</span>
+      <button type="button" class="share-season-btn" id="share-season" title="Share your season card">Share card</button>
     </div>
     ${latestHtml}
     <div class="my-stats">
@@ -89,6 +133,7 @@ export function render(){
   <div class="season">PL + Champions League · personal archive</div>
 </div>
 ${S.loadError?`<div class="err-banner">${escapeHtml(S.loadError)}</div>`:''}
+${renderSpotlight()}
 <div class="scoreboard">
   <div class="flip"><div class="val">${stats.p}</div><div class="lab">Played</div></div>
   <div class="flip"><div class="val">${stats.w}</div><div class="lab">Won</div></div>
@@ -124,6 +169,7 @@ ${renderDialog()}`;
   root.querySelector('#future-seasons')?.addEventListener('click',()=>{
     alert('2026/27 is the live season. Future seasons unlock when this archive closes — your calls and cards stay with you.');
   });
+  root.querySelector('#share-season')?.addEventListener('click',()=>{shareSeasonCard()});
   root.querySelectorAll('[data-open-fan]').forEach(btn=>btn.addEventListener('click',()=>{S.openDialogFid=+btn.dataset.openFan;render()}));
   visible.forEach(f=>{
     const saveBtn=root.querySelector(`#save-${f.id}`),editBtn=root.querySelector(`#edit-${f.id}`);

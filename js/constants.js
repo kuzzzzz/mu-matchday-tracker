@@ -64,5 +64,8 @@ export const FIXTURES = [
   { id: 38, gw: 38, date: 'Sun 30 May 2027', opp: 'Fulham', venue: 'H', comp: 'PL' },
 ];
 
+/** Matchday campaign spotlight — Man City GW4 */
+export const FEATURED_ID = 4;
+
 export const STORAGE_KEY = 'mu-tracker-data-v1';
 export const NICK_KEY = 'mu-tracker-nick';

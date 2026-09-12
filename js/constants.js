@@ -10,18 +10,23 @@ export const MU_CHANNEL = 'UC6yW44UGJJBvYTlfC7CRg2Q';
 
 export const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
 
-export const HIGHLIGHT_IDS = {1:{id:'n72HGVMWzVE',extended:'ICbp7kdsVFg'},2:{id:'o5IagQpM_kE'},3:{id:'ArGkIfatGGc',extended:'AUwVEwf57ic'}};
+export const HIGHLIGHT_IDS = {1:{id:'n72HGVMWzVE',extended:'ICbp7kdsVFg'},2:{id:'o5IagQpM_kE'},3:{id:'ArGkIfatGGc',extended:'AUwVEwf57ic'},101:{id:'ch_4efPW8xc',extended:'KorfGTwtqzg'}};
+
+/** Manual / curated FT scores when competition API is missing (e.g. UCL) */
+export const KNOWN_RESULTS = {
+  101: { mu: 4, opp: 0, highlight: 'Full time · Man United 4–0 Sabah. Cunha, Fernandes, Sesko, Martínez.' }
+};
 
 export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Training niggle end of week'},{name:'Tom Heaton',reason:'Knock',status:'doubt',return:'TBC',note:'Being assessed'}]};
 
 /** PL + UCL league phase, chronological */
 export const FIXTURES = [
-  { id: 1, gw: 1, date: 'Sat 22 Aug 2026', opp: 'Hull City', venue: 'A', comp: 'PL' },
-  { id: 2, gw: 2, date: 'Sun 30 Aug 2026', opp: 'Ipswich Town', venue: 'H', comp: 'PL' },
-  { id: 3, gw: 3, date: 'Sun 6 Sep 2026', opp: 'Everton', venue: 'A', comp: 'PL' },
-  { id: 101, gw: null, date: 'Thu 10 Sep 2026', opp: 'Sabah', venue: 'H', comp: 'UCL', md: 1 },
-  { id: 4, gw: 4, date: 'Sun 13 Sep 2026', opp: 'Manchester City', venue: 'H', comp: 'PL' },
-  { id: 5, gw: 5, date: 'Sun 20 Sep 2026', opp: 'Fulham', venue: 'A', comp: 'PL' },
+  { id: 1, gw: 1, date: 'Sat 22 Aug 2026', time: '15:00', opp: 'Hull City', venue: 'A', comp: 'PL' },
+  { id: 2, gw: 2, date: 'Sun 30 Aug 2026', time: '16:30', opp: 'Ipswich Town', venue: 'H', comp: 'PL' },
+  { id: 3, gw: 3, date: 'Sun 6 Sep 2026', time: '14:00', opp: 'Everton', venue: 'A', comp: 'PL' },
+  { id: 101, gw: null, date: 'Thu 10 Sep 2026', time: '20:00', opp: 'Sabah', venue: 'H', comp: 'UCL', md: 1 },
+  { id: 4, gw: 4, date: 'Sun 13 Sep 2026', time: '16:30', opp: 'Manchester City', venue: 'H', comp: 'PL' },
+  { id: 5, gw: 5, date: 'Sun 20 Sep 2026', time: '14:00', opp: 'Fulham', venue: 'A', comp: 'PL' },
   { id: 6, gw: 6, date: 'Sat 10 Oct 2026', opp: 'Tottenham', venue: 'H', comp: 'PL' },
   { id: 102, gw: null, date: 'Tue 13 Oct 2026', opp: 'Atlético Madrid', venue: 'A', comp: 'UCL', md: 2 },
   { id: 7, gw: 7, date: 'Sun 18 Oct 2026', opp: 'Leeds United', venue: 'A', comp: 'PL' },

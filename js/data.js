@@ -3,7 +3,7 @@
  */
 import { ref, set, push } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import {
-  API_BASE, PIPED, RSS2JSON, MU_CHANNEL, HIGHLIGHT_IDS, DEFAULT_INJURIES, FIXTURES,
+  API_BASE, PIPED, RSS2JSON, MU_CHANNEL, HIGHLIGHT_IDS, KNOWN_RESULTS, DEFAULT_INJURIES, FIXTURES,
   STORAGE_KEY, NICK_KEY
 } from './constants.js';
 import { S } from './state.js';
@@ -17,6 +17,24 @@ export async function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.strin
 export async function searchHighlights(f){const queries=[`${f.opp} v Man Utd | Highlights`,`Man Utd v ${f.opp} | Highlights`,`Manchester United vs ${f.opp} Highlights`];for(const q of queries){try{const res=await fetch(`${PIPED}/search?q=${encodeURIComponent(q)}&filter=videos`);if(!res.ok)continue;const data=await res.json();const items=data.items||data||[];const streams=items.filter(it=>it.type==='stream'||(it.url||'').includes('watch'));const scored=streams.map(it=>{const id=(it.url||'').split('v=')[1]||it.id;const title=(it.title||'').toLowerCase(),up=(it.uploaderName||'').toLowerCase(),upUrl=it.uploaderUrl||'';let score=0;if(up.includes('manchester united')||upUrl.includes(MU_CHANNEL))score+=50;if(up.includes('nbc')||up.includes('sky sports')||up.includes('premier league'))score+=40;if(title.includes('highlight'))score+=30;if(title.includes('extended'))score+=5;if(title.includes('matchday live')||title.includes('build-up')||title.includes('pre-match')||title.includes('post-match interview'))score-=60;if(normalizeName(title).includes(normalizeName(f.opp)))score+=20;if(it.duration&&it.duration>=180&&it.duration<=1200)score+=15;if(it.duration&&it.duration>1800)score-=40;if(it.duration&&it.duration<120)score-=20;return{id,title:it.title,score}}).filter(x=>x.id).sort((a,b)=>b.score-a.score);if(scored[0]&&scored[0].score>=30){const best=scored[0],extended=scored.find(s=>s.id!==best.id&&/extended/i.test(s.title));return{id:best.id,extended:extended?.id||null}}}catch(_){}}return null}
 
 export async function autoImportResults(){
+  /* Seed curated results (UCL etc.) that the PL scoreboard cannot provide */
+  let changed=false;
+  for(const f of FIXTURES){
+    const key=String(f.id);
+    if(S.records[key]?.mu!==undefined)continue;
+    const known=KNOWN_RESULTS[f.id]||KNOWN_RESULTS[key];
+    if(!known)continue;
+    if(!isOnOrAfterMatchDay(f))continue;
+    const hl=HIGHLIGHT_IDS[f.id];
+    S.records[key]={
+      mu:+known.mu,opp:+known.opp,auto:true,
+      highlight:known.highlight||`Full time · Man United ${known.mu}–${known.opp} ${f.opp}.`,
+      videoId:hl?.id||null,videoExtended:hl?.extended||null
+    };
+    changed=true;
+  }
+  if(changed){try{await saveData()}catch(_){}}
+
   /* Allow retries while unfinished fixtures still lack scores (match can finish mid-afternoon). */
   const toCheck=FIXTURES.filter(f=>{
     const rec=S.records[f.id]||S.records[String(f.id)];
@@ -28,13 +46,12 @@ export async function autoImportResults(){
       if(!rec||rec.mu===undefined)continue;
       const known=HIGHLIGHT_IDS[f.id];
       if(known&&(!rec.videoId||rec.videoId!==known.id)){
-        rec.videoId=known.id;rec.videoExtended=known.extended||null;
-        try{await saveData()}catch(_){}
+        rec.videoId=known.id;rec.videoExtended=known.extended||null;changed=true;
       }
     }
+    if(changed){try{await saveData()}catch(_){}}
     return;
   }
-  let changed=false;
   const byDate={};
   for(const fixture of toCheck){
     const ymd=toYmd(parseFixtureDate(fixture.date));

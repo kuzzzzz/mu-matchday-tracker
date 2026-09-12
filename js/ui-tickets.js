@@ -6,6 +6,21 @@ import { S } from './state.js';
 import { escapeHtml, resultFor, isMatchFinished, myPredFor, predOutcome } from './domain.js';
 import { videoBanner, fanIconBtn } from './ui-fans.js';
 
+function whenLine(f){
+  const bits=[f.date];
+  if(f.time)bits.push(f.time);
+  bits.push(f.venue==='H'?'Home':'Away');
+  return bits.join(' · ');
+}
+function predSummary(f){
+  const list=[...(S.discussions[String(f.id)]||[]),...(S.discussions[f.id]||[])];
+  const preds=list.filter(c=>c.type==='prediction'||(c.mu!==undefined&&c.opp!==undefined&&c.type!=='comment'));
+  if(!preds.length)return'';
+  const shown=preds.slice(-3).reverse().map(c=>`${escapeHtml(c.nick||'Fan')} ${c.mu}–${c.opp}`).join(' · ');
+  const more=preds.length>3?` · +${preds.length-3} more`:'';
+  return`<div class="pred-summary">${preds.length} call${preds.length===1?'':'s'}: ${shown}${more}</div>`;
+}
+
 /** Pending lock strip (upcoming / not yet played) */
 function predPendingHtml(f){
   const nick=localStorage.getItem(NICK_KEY)||'';
@@ -57,15 +72,14 @@ function renderReckoning(f,rec){
 export function renderTicket(f){
   const rec=S.records[f.id]||S.records[String(f.id)];
   const played=rec&&rec.mu!==undefined;
-  const venueLabel=f.venue==='H'?'Home':'Away';
   const stub=f.comp==='UCL'?`UCL MD${f.md}`:`GW ${f.gw}`;
   const gwLabel=f.comp==='UCL'?`UCL MD${f.md}`:`Matchday ${f.gw}`;
   const compLabel=f.comp==='PL'?'Prem':f.comp==='UCL'?'Champions League':f.comp;
 
   if(played){
     const r=resultFor(rec);
-    return`<div class="ticket"><div class="stub">${stub} · ${f.comp}</div><div class="body stamp-block"><div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div><div class="row1"><span class="gw">${gwLabel}</span><span class="comp">${compLabel}</span></div><div class="date">${f.date} · ${venueLabel}</div><div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div><div class="final-score">${rec.mu} – ${rec.opp}</div>${rec.auto?'<div class="auto-tag">Auto score</div>':''}${renderReckoning(f,rec)}<div class="highlight-display ${rec.highlight?'':'empty'}">${rec.highlight?escapeHtml(rec.highlight):'No note.'}</div>${videoBanner(f,rec)}<div class="card-actions">${fanIconBtn(f)}<button class="edit-link" id="edit-${f.id}">Edit result</button></div></div></div>`;
+    return`<div class="ticket"><div class="stub">${stub} · ${f.comp}</div><div class="body stamp-block"><div class="result-stamp ${r}">${r==='W'?'WIN':r==='D'?'DRAW':'LOSS'}</div><div class="row1"><span class="gw">${gwLabel}</span><span class="comp">${compLabel}</span></div><div class="date">${whenLine(f)}</div><div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div><div class="final-score">${rec.mu} – ${rec.opp}</div>${rec.auto?'<div class="auto-tag">Auto score</div>':''}${renderReckoning(f,rec)}${predSummary(f)}<div class="highlight-display ${rec.highlight?'':'empty'}">${rec.highlight?escapeHtml(rec.highlight):'No note.'}</div>${videoBanner(f,rec)}<div class="card-actions">${fanIconBtn(f)}<button class="edit-link" id="edit-${f.id}">Edit result</button></div></div></div>`;
   }
 
-  return`<div class="ticket"><div class="stub">${stub} · ${f.comp}</div><div class="body"><div class="row1"><span class="gw">${gwLabel}</span><span class="comp">${compLabel}</span></div><div class="date">${f.date} · ${venueLabel}</div><div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>${predPendingHtml(f)}<div class="score-form"><span class="mu-mono">MUFC</span><input type="number" min="0" id="mu-${f.id}" placeholder="-"/><span class="vs">:</span><input type="number" min="0" id="opp-${f.id}" placeholder="-"/><span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span></div><textarea class="highlight-input" id="hl-${f.id}" placeholder="Optional note for your prediction...">${rec&&rec.highlight?escapeHtml(rec.highlight):''}</textarea><div class="card-actions">${fanIconBtn(f)}<button class="save-btn" id="save-${f.id}">${isMatchFinished(f)?'Stamp result':'Lock prediction'}</button></div></div></div>`;
+  return`<div class="ticket"><div class="stub">${stub} · ${f.comp}</div><div class="body"><div class="row1"><span class="gw">${gwLabel}</span><span class="comp">${compLabel}</span></div><div class="date">${whenLine(f)}</div><div class="fixture-line">Man United <span class="venue-tag">${f.venue}</span> vs ${f.opp}</div>${predPendingHtml(f)}${predSummary(f)}<div class="score-form"><span class="mu-mono">MUFC</span><input type="number" min="0" id="mu-${f.id}" placeholder="-"/><span class="vs">:</span><input type="number" min="0" id="opp-${f.id}" placeholder="-"/><span class="mu-mono">${escapeHtml(f.opp).slice(0,4).toUpperCase()}</span></div><textarea class="highlight-input" id="hl-${f.id}" placeholder="Optional note for your prediction...">${rec&&rec.highlight?escapeHtml(rec.highlight):''}</textarea><div class="card-actions">${fanIconBtn(f)}<button class="save-btn" id="save-${f.id}">${isMatchFinished(f)?'Stamp result':'Lock prediction'}</button></div></div></div>`;
 }

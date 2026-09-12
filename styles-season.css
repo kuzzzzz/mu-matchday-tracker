@@ -43,6 +43,10 @@
 .ticket-pred.miss{background:rgba(140,11,32,.08);border-color:#c88;color:var(--red-dark)}
 .ticket-pred.pending{background:rgba(198,161,91,.12);border-color:#c6a15b;color:#6b5530}
 
+/* Fan prediction strip on tickets */
+.pred-summary{font-size:11px;color:var(--grey);margin:6px 0 8px;line-height:1.4}
+.ticket .pred-summary{opacity:.9}
+
 /* Post-match reckoning on ticket */
 .reckoning{margin:10px 0 12px;padding:10px 12px;border-radius:8px;border:1px solid #c8b98a;background:rgba(36,30,23,.04)}
 .reckoning.exact{border-color:var(--green);background:rgba(47,82,51,.1)}

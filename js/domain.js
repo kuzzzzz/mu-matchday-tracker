@@ -19,11 +19,24 @@ export function computeStats(){let p=0,w=0,d=0,l=0,gf=0,ga=0;const streak=[];FIX
 /** Latest prediction by nick for a fixture id, or null */
 export function myPredFor(fid,nick){
   if(!nick)return null;
-  const list=S.discussions[String(fid)]||[];
+  const list=[
+    ...(S.discussions[String(fid)]||[]),
+    ...(S.discussions[fid]||[]),
+    ...(S.discussions[Number(fid)]||[]),
+  ];
+  const seen=new Set();
+  const merged=[];
+  for(const c of list){
+    const k=c.id||`${c.nick}|${c.ts}|${c.mu}-${c.opp}`;
+    if(seen.has(k))continue;
+    seen.add(k);
+    merged.push(c);
+  }
   const n=nick.toLowerCase();
   let best=null;
-  for(const c of list){
-    if(c.type==='prediction'&&(c.nick||'').toLowerCase()===n){
+  for(const c of merged){
+    const isPred=c.type==='prediction'||(c.mu!==undefined&&c.opp!==undefined&&c.type!=='comment');
+    if(isPred&&(c.nick||'').toLowerCase()===n){
       if(!best||(c.ts||0)>=(best.ts||0))best=c;
     }
   }

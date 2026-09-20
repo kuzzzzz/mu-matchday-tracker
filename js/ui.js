@@ -1,7 +1,7 @@
 /**
  * ui.js — main render (Focus home view + season identity)
  */
-import { FIXTURES, HIGHLIGHT_IDS, NICK_KEY, FEATURED_ID } from './constants.js';
+import { FIXTURES, HIGHLIGHT_IDS, NICK_KEY } from './constants.js';
 import { ref, push } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import { S, root } from './state.js';
 import { escapeHtml, computeStats, fireConfetti, resultFor, isMatchFinished, computeMySeason, myPredFor, predOutcome } from './domain.js';
@@ -11,36 +11,27 @@ import { renderDialog } from './ui-fans.js';
 import { renderTicket } from './ui-tickets.js';
 import { shareSeasonCard } from './ui-share.js';
 
+/** Next unplayed fixture in calendar order — spotlight always tracks the live campaign match */
+function nextSpotlightFixture(){
+  return FIXTURES.find(f=>{
+    const rec=S.records[f.id]||S.records[String(f.id)];
+    return !(rec&&rec.mu!==undefined);
+  })||null;
+}
+
 function renderSpotlight(){
-  const f=FIXTURES.find(x=>x.id===FEATURED_ID);
+  const f=nextSpotlightFixture();
   if(!f)return'';
-  const rec=S.records[f.id]||S.records[String(f.id)];
-  const played=!!(rec&&rec.mu!==undefined);
   const nick=localStorage.getItem(NICK_KEY)||'';
   const pred=nick?myPredFor(f.id,nick):null;
   const venue=f.venue==='H'?'Old Trafford · Home':'Away';
   const label=f.comp==='UCL'?`UCL MD${f.md}`:`GW${f.gw}`;
-
-  if(played){
-    const out=pred?predOutcome(pred,rec):null;
-    const badge=out==='exact'?'Exact +3':out==='result'?'Result +1':out==='miss'?'Miss':'Settled';
-    const outCls=out||'settled';
-    return`<div class="spotlight settled ${outCls}">
-      <div class="spot-kicker">Matchday · settled</div>
-      <div class="spot-title">${escapeHtml(f.opp)} · ${rec.mu}–${rec.opp}</div>
-      <div class="spot-meta">${label} · ${escapeHtml(f.date)} · ${venue}</div>
-      ${pred?`<div class="spot-call">Your call ${pred.mu}–${pred.opp} · <strong>${badge}</strong></div>`:`<div class="spot-call">No call locked for this one</div>`}
-      <div class="spot-actions">
-        <button type="button" class="spot-btn ghost" data-open-fan="${f.id}">Open chat</button>
-      </div>
-    </div>`;
-  }
-
+  const when=[f.date,f.time,venue].filter(Boolean).join(' · ');
   const locked=!!pred;
   return`<div class="spotlight open">
-    <div class="spot-kicker">Matchday campaign</div>
+    <div class="spot-kicker">Next up · lock in</div>
     <div class="spot-title">Before ${escapeHtml(f.opp)} — lock your score</div>
-    <div class="spot-meta">${label} · ${escapeHtml(f.date)} · ${venue}</div>
+    <div class="spot-meta">${label} · ${escapeHtml(when)}</div>
     <p class="spot-blurb">One fixture. One deadline. After the whistle we settle reckoning — closest call owns the bragging rights.</p>
     ${locked
       ?`<div class="spot-call locked">Locked · You ${pred.mu}–${pred.opp} · waiting for kickoff</div>

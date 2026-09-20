@@ -17,7 +17,7 @@ export const KNOWN_RESULTS = {
   101: { mu: 4, opp: 0, highlight: 'Full time · Man United 4–0 Sabah. Cunha, Fernandes, Sesko, Martínez.' }
 };
 
-export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Training niggle end of week'},{name:'Tom Heaton',reason:'Knock',status:'doubt',return:'TBC',note:'Being assessed'}]};
+export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Being assessed'}]};
 
 /** PL + UCL league phase, chronological */
 export const FIXTURES = [
@@ -68,9 +68,6 @@ export const FIXTURES = [
   { id: 37, gw: 37, date: 'Sun 23 May 2027', opp: 'Tottenham', venue: 'A', comp: 'PL' },
   { id: 38, gw: 38, date: 'Sun 30 May 2027', opp: 'Fulham', venue: 'H', comp: 'PL' },
 ];
-
-/** Matchday campaign spotlight — Man City GW4 */
-export const FEATURED_ID = 4;
 
 export const STORAGE_KEY = 'mu-tracker-data-v1';
 export const NICK_KEY = 'mu-tracker-nick';

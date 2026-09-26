@@ -11,9 +11,19 @@ import {
   parseFixtureDate, isMatchFinished, isOnOrAfterMatchDay, toYmd, normalizeName, namesMatch, isManUnited, resultFor
 } from './domain.js';
 
-export async function postPrediction(fid,mu,opp,text){const nick=(localStorage.getItem(NICK_KEY)||'Fan').slice(0,24);const payload={type:'prediction',nick,mu:+mu,opp:+opp,text:(text||'').trim().slice(0,200),ts:Date.now()};if(S.discussRef){await push(ref(S.db,`discuss/${fid}`),payload)}else{const key=String(fid);S.discussions[key]=S.discussions[key]||[];S.discussions[key].push(payload)}}
+export async function postPrediction(fid,mu,opp,text){const nick=(localStorage.getItem(NICK_KEY)||'Fan').slice(0,24);const payload={type:'prediction',nick,mu:+mu,opp:+opp,text:(text||'').trim().slice(0,200),ts:Date.now()};if(S.discussRef){try{await push(ref(S.db,`discuss/${fid}`),payload)}catch(e){console.warn('Firebase discuss write failed',e);const key=String(fid);S.discussions[key]=S.discussions[key]||[];S.discussions[key].push(payload)}}else{const key=String(fid);S.discussions[key]=S.discussions[key]||[];S.discussions[key].push(payload)}}
 
-export async function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S.records))}catch(_){}if(S.recordsRef)await set(S.recordsRef,S.records)}
+export async function saveData(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(S.records))}catch(_){}
+  if(!S.recordsRef)return;
+  try{await set(S.recordsRef,S.records)}
+  catch(e){
+    console.warn('Firebase write /records failed',e);
+    if(!S.loadError&&e&&/permission/i.test(String(e.message||e))){
+      S.loadError='Firebase blocked writes to /records. Update Realtime Database rules (read+write for records, discuss, injuries). Scores still update locally this session.';
+    }
+  }
+}
 export async function searchHighlights(f){const queries=[`${f.opp} v Man Utd | Highlights`,`Man Utd v ${f.opp} | Highlights`,`Manchester United vs ${f.opp} Highlights`];for(const q of queries){try{const res=await fetch(`${PIPED}/search?q=${encodeURIComponent(q)}&filter=videos`);if(!res.ok)continue;const data=await res.json();const items=data.items||data||[];const streams=items.filter(it=>it.type==='stream'||(it.url||'').includes('watch'));const scored=streams.map(it=>{const id=(it.url||'').split('v=')[1]||it.id;const title=(it.title||'').toLowerCase(),up=(it.uploaderName||'').toLowerCase(),upUrl=it.uploaderUrl||'';let score=0;if(up.includes('manchester united')||upUrl.includes(MU_CHANNEL))score+=50;if(up.includes('nbc')||up.includes('sky sports')||up.includes('premier league'))score+=40;if(title.includes('highlight'))score+=30;if(title.includes('extended'))score+=5;if(title.includes('matchday live')||title.includes('build-up')||title.includes('pre-match')||title.includes('post-match interview'))score-=60;if(normalizeName(title).includes(normalizeName(f.opp)))score+=20;if(it.duration&&it.duration>=180&&it.duration<=1200)score+=15;if(it.duration&&it.duration>1800)score-=40;if(it.duration&&it.duration<120)score-=20;return{id,title:it.title,score}}).filter(x=>x.id).sort((a,b)=>b.score-a.score);if(scored[0]&&scored[0].score>=30){const best=scored[0],extended=scored.find(s=>s.id!==best.id&&/extended/i.test(s.title));return{id:best.id,extended:extended?.id||null}}}catch(_){}}return null}
 
 export async function autoImportResults(){

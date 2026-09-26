@@ -13,7 +13,8 @@ function whenLine(f){
   return bits.join(' · ');
 }
 function predSummary(f){
-  const list=[...(S.discussions[String(f.id)]||[]),...(S.discussions[f.id]||[])];
+  /* Keys are always strings in JS objects — do not merge String(id) + id or every call doubles */
+  const list=S.discussions[String(f.id)]||[];
   const preds=list.filter(c=>c.type==='prediction'||(c.mu!==undefined&&c.opp!==undefined&&c.type!=='comment'));
   if(!preds.length)return'';
   const shown=preds.slice(-3).reverse().map(c=>`${escapeHtml(c.nick||'Fan')} ${c.mu}–${c.opp}`).join(' · ');

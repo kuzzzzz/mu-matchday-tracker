@@ -12,12 +12,14 @@ export const MONTHS = {Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct
 
 export const HIGHLIGHT_IDS = {1:{id:'n72HGVMWzVE',extended:'ICbp7kdsVFg'},2:{id:'o5IagQpM_kE'},3:{id:'ArGkIfatGGc',extended:'AUwVEwf57ic'},101:{id:'ch_4efPW8xc',extended:'KorfGTwtqzg'}};
 
-/** Manual / curated FT scores when competition API is missing (e.g. UCL) */
+/** Manual / curated FT scores when competition API is missing (e.g. UCL) or Firebase is blocked */
 export const KNOWN_RESULTS = {
-  101: { mu: 4, opp: 0, highlight: 'Full time · Man United 4–0 Sabah. Cunha, Fernandes, Sesko, Martínez.' }
+  101: { mu: 4, opp: 0, highlight: 'Full time · Man United 4–0 Sabah. Cunha, Fernandes, Sesko, Martínez.' },
+  4: { mu: 0, opp: 1, highlight: 'Full time · Man United 0–1 Manchester City.' },
+  5: { mu: 1, opp: 1, highlight: 'Full time · Fulham 1–1 Man United. Cunha late equaliser.' }
 };
 
-export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Being assessed'}]};
+export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Training niggle end of week'},{name:'Tom Heaton',reason:'Knock',status:'doubt',return:'TBC',note:'Being assessed'}]};
 
 /** PL + UCL league phase, chronological */
 export const FIXTURES = [

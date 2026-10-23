@@ -4,6 +4,17 @@
 export const firebaseConfig = {apiKey:"AIzaSyBZ_KO97a6ZjIdQDKADwJD9J5bv0ozfrPs",authDomain:"manumatchlog.firebaseapp.com",databaseURL:"https://manumatchlog-default-rtdb.europe-west1.firebasedatabase.app",projectId:"manumatchlog",storageBucket:"manumatchlog.firebasestorage.app",messagingSenderId:"723395600000",appId:"1:723395600000:web:ee1a72c1288ad7c7345065",measurementId:"G-NRK67M2WTE"};
 
 export const API_BASE = 'https://worldcup26.ir/get/soccer/eng.1';
+
+/** API-Football (api-sports.io) — UCL + multi-comp scores
+ *  1. Free key: https://dashboard.api-football.com/register
+ *  2. Paste into API_FOOTBALL_KEY below, OR set localStorage key `mu-api-football-key`
+ *  Free tier ~100 req/day — we only call once per page load for unfinished UCL fixtures.
+ */
+export const API_FOOTBALL_BASE = 'https://v3.football.api-sports.io';
+export const API_FOOTBALL_KEY = ''; // paste key here or use localStorage
+export const API_FOOTBALL_MU_ID = 33;       // Manchester United
+export const API_FOOTBALL_UCL_ID = 2;       // UEFA Champions League
+export const API_FOOTBALL_SEASON = 2026;    // 2026/27 season year
 export const PIPED = 'https://api.piped.private.coffee';
 export const RSS2JSON = 'https://api.rss2json.com/v1/api.json?rss_url=';
 export const MU_CHANNEL = 'UC6yW44UGJJBvYTlfC7CRg2Q';

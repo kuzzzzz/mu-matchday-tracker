@@ -4,7 +4,8 @@
 import { ref, set, push } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js';
 import {
   API_BASE, PIPED, RSS2JSON, MU_CHANNEL, HIGHLIGHT_IDS, KNOWN_RESULTS, DEFAULT_INJURIES, FIXTURES,
-  STORAGE_KEY, NICK_KEY
+  STORAGE_KEY, NICK_KEY,
+  API_FOOTBALL_BASE, API_FOOTBALL_KEY, API_FOOTBALL_MU_ID, API_FOOTBALL_UCL_ID, API_FOOTBALL_SEASON
 } from './constants.js';
 import { S } from './state.js';
 import {
@@ -26,6 +27,87 @@ export async function saveData(){
 }
 export async function searchHighlights(f){const queries=[`${f.opp} v Man Utd | Highlights`,`Man Utd v ${f.opp} | Highlights`,`Manchester United vs ${f.opp} Highlights`];for(const q of queries){try{const res=await fetch(`${PIPED}/search?q=${encodeURIComponent(q)}&filter=videos`);if(!res.ok)continue;const data=await res.json();const items=data.items||data||[];const streams=items.filter(it=>it.type==='stream'||(it.url||'').includes('watch'));const scored=streams.map(it=>{const id=(it.url||'').split('v=')[1]||it.id;const title=(it.title||'').toLowerCase(),up=(it.uploaderName||'').toLowerCase(),upUrl=it.uploaderUrl||'';let score=0;if(up.includes('manchester united')||upUrl.includes(MU_CHANNEL))score+=50;if(up.includes('nbc')||up.includes('sky sports')||up.includes('premier league'))score+=40;if(title.includes('highlight'))score+=30;if(title.includes('extended'))score+=5;if(title.includes('matchday live')||title.includes('build-up')||title.includes('pre-match')||title.includes('post-match interview'))score-=60;if(normalizeName(title).includes(normalizeName(f.opp)))score+=20;if(it.duration&&it.duration>=180&&it.duration<=1200)score+=15;if(it.duration&&it.duration>1800)score-=40;if(it.duration&&it.duration<120)score-=20;return{id,title:it.title,score}}).filter(x=>x.id).sort((a,b)=>b.score-a.score);if(scored[0]&&scored[0].score>=30){const best=scored[0],extended=scored.find(s=>s.id!==best.id&&/extended/i.test(s.title));return{id:best.id,extended:extended?.id||null}}}catch(_){}}return null}
 
+function apiFootballKey(){
+  try{
+    const ls=localStorage.getItem('mu-api-football-key');
+    if(ls&&ls.trim())return ls.trim();
+  }catch(_){}
+  return (API_FOOTBALL_KEY||'').trim();
+}
+
+/**
+ * Pull finished UCL results for United from API-Football and map onto FIXTURES.
+ * One request: team + league + season + status FT.
+ */
+export async function importUclFromApiFootball(){
+  const key=apiFootballKey();
+  if(!key){
+    console.info('API-Football: no key — set API_FOOTBALL_KEY or localStorage mu-api-football-key');
+    return false;
+  }
+  const pending=FIXTURES.filter(f=>{
+    if(f.comp!=='UCL')return false;
+    const rec=S.records[f.id]||S.records[String(f.id)];
+    return !(rec&&rec.mu!==undefined) && isOnOrAfterMatchDay(f);
+  });
+  if(!pending.length)return false;
+
+  const url=`${API_FOOTBALL_BASE}/fixtures?team=${API_FOOTBALL_MU_ID}&league=${API_FOOTBALL_UCL_ID}&season=${API_FOOTBALL_SEASON}&status=FT-AET-PEN`;
+  let data;
+  try{
+    const res=await fetch(url,{headers:{'x-apisports-key':key}});
+    if(!res.ok){console.warn('API-Football UCL',res.status);return false}
+    data=await res.json();
+  }catch(e){console.warn('API-Football UCL fetch',e);return false}
+
+  if(data?.errors && Object.keys(data.errors).length){
+    console.warn('API-Football errors',data.errors);
+    return false;
+  }
+  const rows=data?.response||[];
+  let changed=false;
+  for(const fixture of pending){
+    const keyId=String(fixture.id);
+    if(S.records[keyId]?.mu!==undefined)continue;
+    const match=rows.find(row=>{
+      const home=row.teams?.home?.name||'';
+      const away=row.teams?.away?.name||'';
+      const oppName=fixture.venue==='H'?away:home;
+      if(!namesMatch(oppName,fixture.opp)&&!namesMatch(fixture.opp,oppName))return false;
+      try{
+        const fd=parseFixtureDate(fixture.date);
+        const apiD=row.fixture?.date?new Date(row.fixture.date):null;
+        if(apiD&&fd){
+          const diff=Math.abs(apiD-fd);
+          if(diff>3*24*3600*1000)return false;
+        }
+      }catch(_){}
+      return true;
+    });
+    if(!match)continue;
+    const homeId=match.teams?.home?.id;
+    const isHome=homeId===API_FOOTBALL_MU_ID;
+    const gh=+match.goals?.home, ga=+match.goals?.away;
+    if(Number.isNaN(gh)||Number.isNaN(ga))continue;
+    const muScore=isHome?gh:ga;
+    const oppScore=isHome?ga:gh;
+    const oppLabel=isHome?(match.teams?.away?.name||fixture.opp):(match.teams?.home?.name||fixture.opp);
+    const hl=HIGHLIGHT_IDS[fixture.id];
+    const hlText=fixture.venue==='H'
+      ?`Full time · Man United ${muScore}–${oppScore} ${oppLabel}.`
+      :`Full time · ${oppLabel} ${oppScore}–${muScore} Man United.`;
+    S.records[keyId]={
+      mu:muScore,opp:oppScore,auto:true,
+      highlight:hlText,
+      videoId:hl?.id||null,videoExtended:hl?.extended||null,
+      source:'api-football'
+    };
+    changed=true;
+  }
+  if(changed){try{await saveData()}catch(_){}}
+  return changed;
+}
+
 export async function autoImportResults(){
   /* Seed curated results (UCL etc.) that the PL scoreboard cannot provide */
   let changed=false;
@@ -44,6 +126,9 @@ export async function autoImportResults(){
     changed=true;
   }
   if(changed){try{await saveData()}catch(_){}}
+
+  /* UCL via API-Football (when key is set) */
+  try{await importUclFromApiFootball()}catch(e){console.warn('UCL import',e)}
 
   /* Allow retries while unfinished fixtures still lack scores (match can finish mid-afternoon). */
   const toCheck=FIXTURES.filter(f=>{

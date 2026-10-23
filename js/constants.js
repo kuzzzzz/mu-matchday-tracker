@@ -18,7 +18,8 @@ export const KNOWN_RESULTS = {
   4: { mu: 0, opp: 1, highlight: 'Full time · Man United 0–1 Manchester City.' },
   5: { mu: 1, opp: 1, highlight: 'Full time · Fulham 1–1 Man United. Cunha late equaliser.' },
   6: { mu: 1, opp: 1, highlight: 'Full time · Man United 1–1 Tottenham. Mbeumo; Solanke late.' },
-  102: { mu: 0, opp: 2, highlight: 'Full time · Atlético Madrid 2–0 Man United. Barrios, Lookman. Yoro sent off.' }
+  102: { mu: 0, opp: 2, highlight: 'Full time · Atlético Madrid 2–0 Man United. Barrios, Lookman. Yoro sent off.' },
+  103: { mu: 1, opp: 4, highlight: 'Full time · Como 4–1 Man United. Paz (2), Douvikas, Ramón; Zirkzee.' }
 };
 
 export const DEFAULT_INJURIES = {updated:'23 Aug 2026',source:'https://www.premierinjuries.com/teams/manchester-united',players:[{name:'Matthijs de Ligt',reason:'Lower back',status:'out',return:'06/09/2026',note:'Back training; not involved yet'},{name:'Mason Mount',reason:'Ankle/foot',status:'doubt',return:'30/08/2026',note:'Touch and go'},{name:'Manuel Ugarte',reason:'Knee (surgery)',status:'out',return:'TBC',note:'World Cup ligament surgery'},{name:'Amad Diallo',reason:'Niggle',status:'out',return:'TBC',note:'Training niggle end of week'},{name:'Tom Heaton',reason:'Knock',status:'doubt',return:'TBC',note:'Being assessed'}]};
@@ -34,7 +35,7 @@ export const FIXTURES = [
   { id: 6, gw: 6, date: 'Sat 10 Oct 2026', time: '17:30', opp: 'Tottenham', venue: 'H', comp: 'PL' },
   { id: 102, gw: null, date: 'Tue 13 Oct 2026', time: '20:00', opp: 'Atlético Madrid', venue: 'A', comp: 'UCL', md: 2 },
   { id: 7, gw: 7, date: 'Sun 18 Oct 2026', time: '14:00', opp: 'Leeds United', venue: 'A', comp: 'PL' },
-  { id: 103, gw: null, date: 'Wed 21 Oct 2026', time: '20:00', opp: 'Como', venue: 'A', comp: 'UCL', md: 3 },
+  { id: 103, gw: null, date: 'Wed 21 Oct 2026', time: '17:45', opp: 'Como', venue: 'A', comp: 'UCL', md: 3 },
   { id: 8, gw: 8, date: 'Sun 25 Oct 2026', time: '14:00', opp: 'Bournemouth', venue: 'H', comp: 'PL' },
   { id: 9, gw: 9, date: 'Sat 31 Oct 2026', time: '12:30', opp: 'Chelsea', venue: 'A', comp: 'PL' },
   { id: 104, gw: null, date: 'Tue 3 Nov 2026', opp: 'Roma', venue: 'H', comp: 'UCL', md: 4 },
